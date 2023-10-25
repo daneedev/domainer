@@ -1,0 +1,26 @@
+{
+  "name": "domainer",
+  "version": "1.0.0",
+  "description": "A web-based user subdomain manager.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/domainerapp/domainer.git"
+  },
+  "author": "DaneeSkripter",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/domainerapp/domainer/issues"
+  },
+  "homepage": "https://github.com/domainerapp/domainer#readme",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "passport": "^0.6.0"
+  }
+}
