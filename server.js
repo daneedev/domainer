@@ -7,7 +7,7 @@ const mongoose = require("mongoose")
 const flash = require("connect-flash")
 const session = require("cookie-session")
 const initializePassport = require("./handlers/passport")
-const { rateLimit } = require("express-rate-limit")
+const RateLimit = require("express-rate-limit")
 
 app.set("view-engine", "ejs")
 
@@ -15,12 +15,11 @@ app.use(express.static(path.join(__dirname, "public")))
 
 initializePassport(passport)
 
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  limit: 100
-})
-
-app.use(limiter)
+const limiter = RateLimit({
+  windowMs: 15*60*1000,
+  max: 100
+});
+app.use(limiter);
 
 app.use(session({
     name: "logincookie",
