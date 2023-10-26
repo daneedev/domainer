@@ -27,6 +27,18 @@
                 <h1 class="text-xl font-bold text-gray-100 "><%= subdomain.recordType %></h1>
             </div>
             <div class="flex flex-col text-center">
+                <h2 class="text-base text-gray-500 ">Status</h2>
+                <% if (subdomain.status == 0) { %>
+                <h1 class="text-xl font-bold text-red-500"><i class="fa-solid fa-x"></i>&nbsp;Declined</h1>
+                <% } else if (subdomain.status == 1) { %>
+                <h1 class="text-xl font-bold text-yellow-500"><i class="fa-solid fa-clock"></i>&nbsp;In review</h1>
+                <% } else if (subdomain.status == 2) { %>
+                <h1 class="text-xl font-bold text-green-500"><i class="fa-solid fa-check"></i>&nbsp;Approved</h1>
+                <% } else { %>
+                <h1 class="text-xl font-bold text-red-500 "><i class="fa-solid fa-x"></i>&nbsp;Error in DB</h1>
+                <% } %>
+            </div>
+            <div class="flex flex-col text-center">
                 <h2 class="text-base text-gray-500 ">Pointed to</h2>
                 <h1 class="text-xl font-bold text-gray-100 "><%= subdomain.pointedTo %></h1>
             </div>

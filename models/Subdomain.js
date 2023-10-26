@@ -16,6 +16,10 @@ const subdomainSchema = new mongoose.Schema({
     recordType: {
         type: String,
         required: true
+    },
+    status: {
+        type: Number,
+        required: true
     }
 })
 
