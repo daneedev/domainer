@@ -5,7 +5,8 @@ const router3 = express.Router()
 const Subdomain = require("../models/Subdomain")
 const { checkAuth } = require("../handlers/checkAuth")
 const { checkNotAuth } = require("../handlers/checkAuth")
-const { rateLimit } = require("express-rate-limit")
+const RateLimit = require("express-rate-limit")
+const sanitize = require("sanitize-filename")
 
 router.get("/", checkAuth, async function (req, res) {
     res.render(__dirname + "/../views/addsubdomain.ejs", {domain: process.env.DOMAIN, message: req.flash('domainerror')})
@@ -45,7 +46,7 @@ router2.post("/", checkAuth, async function (req, res) {
 })
 
 router3.get("/", checkAuth, async function (req, res) {
-    const subdomain = req.query.subdomain
+    const subdomain = sanitize(req.query.subdomain)
     const findSubdomain = await Subdomain.findOne({subdomain: subdomain})
     if (findSubdomain.owner != req.user.username) {
         res.redirect("/dash")
@@ -54,7 +55,7 @@ router3.get("/", checkAuth, async function (req, res) {
     }
 })
 
-const editLimiter = rateLimit({
+const editLimiter = RateLimit({
     windowMs: 60 * 60 * 1000,
     max: 1
 })
