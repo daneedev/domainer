@@ -9,7 +9,7 @@ router.get("/", function (req, res) {
 })
 
 router2.get("/", checkAuth, async function (req, res) {
-    const subdomains = await Subdomain.find({owner: req.user.username})
+    const subdomains = await Subdomain.find({owner: req.user.username}).sort({status: 1})
     res.render(__dirname + "/../views/dash.ejs", {domain: process.env.DOMAIN, subdomains: subdomains, user: req.user})
 })
 

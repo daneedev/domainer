@@ -48,4 +48,8 @@ app.use("/login", require("./routes/auth").login)
 app.use("/register", require("./routes/auth").register)
 app.use("/logout", require("./routes/auth").logout)
 
+app.use("/add", require("./routes/subdomains").add)
+app.use("/delete", require("./routes/subdomains").delete)
+app.use("/edit", require("./routes/subdomains").edit)
+
 app.listen(3000, () => console.log('Server running on port 3000'));
