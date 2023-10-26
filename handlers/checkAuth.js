@@ -12,5 +12,13 @@ function checkNotAuth(req, res, next) {
     next()
 }
 
+function checkAdmin(req, res, next) {
+    if (req.user.isAdmin) {
+        return next()
+    }
+    res.redirect("/dash")
+}
+
 module.exports.checkAuth = checkAuth
 module.exports.checkNotAuth = checkNotAuth
+module.exports.checkAdmin = checkAdmin

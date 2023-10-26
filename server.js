@@ -60,5 +60,8 @@ app.use("/delete", require("./routes/subdomains").delete)
 app.use("/edit", require("./routes/subdomains").edit)
 
 app.use("/admin", require("./routes/admin").admin)
+app.use("/approve", require("./routes/admin").approve)
+app.use("/decline", require("./routes/admin").decline)
+app.use("/toreview", require("./routes/admin").review)
 
 app.listen(3000, () => console.log('Server running on port 3000'));

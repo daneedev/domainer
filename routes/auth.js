@@ -29,7 +29,8 @@ router2.post("/", checkNotAuth, async function (req, res) {
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
         const newUser = new User({
             username: req.body.username,
-            password: hashedPassword
+            password: hashedPassword,
+            isAdmin: false
         })
         newUser.save().then(() => {
             res.redirect("/login")

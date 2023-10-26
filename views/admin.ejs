@@ -3,24 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Domainer | Dashboard</title>
+    <title>Domainer | Admin panel</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.7/tailwind.min.css" />
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 </head>
 <body class="bg-gray-800">
     <div class="flex w-screen h-screen flex-col items-center ">
-    <div class="flex flex-row justify-center items-center text-center">
-        <h1 class="text-xl font-bold text-gray-100">Welcome, <%= user.username %></h1>
-        <% if (user.isAdmin) { %>
-            <form action="/admin">
-                <button type="submit" class="rounded-2xl pt-2 pb-2 pl-5 pr-5 ml-2 mt-2 duration-200 border-gray-400 border-2 text-gray-400 hover:bg-gray-600"><i class="fa-solid fa-hammer"></i>&nbsp;Admin panel</button>
-            </form>
+        <div class="flex flex-col text-center">
+            <h1 class="text-gray-100 font-bold text-3xl">Admin panel</h1>
+            <h2 class="text-gray-100 font-bold text-2xl">Subdomains</h2>
+        </div>
+        <% if (message.length > 0) { %>
+            <div class="alert alert-danger">
+                <%= message[0] %>
+            </div>
         <% } %>
-        <form action="/logout" method="post">
-            <button type="submit" class="rounded-2xl pt-2 pb-2 pl-5 pr-5 ml-2 mt-2 duration-200 border-gray-400 border-2 text-gray-400 hover:bg-gray-600"><i class="fa-solid fa-right-from-bracket"></i>&nbsp;Logout</button>
-        </form>
-    </div>
     <% subdomains.forEach((subdomain) => { %>
         <div class="flex flex-row justify-between items-center w-5/6 bg-gray-700 rounded-2xl pt-3 pb-3 mt-2">
             <div class="flex flex-col text-center ml-5">
@@ -47,24 +46,29 @@
                 <h2 class="text-base text-gray-500 ">Pointed to</h2>
                 <h1 class="text-xl font-bold text-gray-100 "><%= subdomain.pointedTo %></h1>
             </div>
+            <div class="flex flex-col text-center">
+                <h2 class="text-base text-gray-500 ">Owner</h2>
+                <h1 class="text-xl font-bold text-gray-100 "><%= subdomain.owner %></h1>
+            </div>
             <div class="flex flex-col text-center mr-5">
                 <h2 class="text-base text-gray-500 ">Options</h2>
                 <div class="flex flex-row">
-                    <form action="/edit" method="get">
+                    <form action="/approve" method="post">
                         <input type="hidden" name="subdomain" value="<%= subdomain.subdomain %>">
-                        <button type="submit" class="rounded-2xl pt-2 pb-2 pl-5 pr-5 mt-2 mr-2 duration-200 border-gray-400 border-2 hover:bg-gray-600"><i class="fa-solid fa-pen-to-square text-gray-400"></i></button>
+                        <button type="submit" class="rounded-2xl pt-2 pb-2 pl-5 pr-5 mt-2 mr-2 duration-200 border-gray-400 border-2 hover:bg-gray-600 text-green-500"><i class="fa-solid fa-check"></i></button>
                     </form>
-                    <form action="/delete" method="post">
+                    <form action="/decline" method="post">
                         <input type="hidden" name="subdomain" value="<%= subdomain.subdomain %>">
-                        <button type="submit" class="rounded-2xl  pt-2 pb-2 pl-5 pr-5 mt-2 duration-200 border-gray-400 border-2 hover:bg-gray-600"><i class="fa-solid fa-trash text-gray-400"></i></button>
+                        <button type="submit" class="rounded-2xl  pt-2 pb-2 pl-5 pr-5 mt-2 duration-200 border-gray-400 border-2 hover:bg-gray-600 text-red-500"><i class="fa-solid fa-x"></i></button>
+                    </form>
+                    <form action="/toreview" method="post">
+                        <input type="hidden" name="subdomain" value="<%= subdomain.subdomain %>">
+                        <button type="submit" class="rounded-2xl  pt-2 pb-2 pl-5 pr-5 mt-2 ml-2 duration-200 border-gray-400 border-2 hover:bg-gray-600 text-yellow-500"><i class="fa-solid fa-clock"></i></button>
                     </form>
                 </div>
             </div>
         </div>
     <% }) %>
-    <form action="/add">
-        <button type="submit" class="rounded-2xl  pt-2 pb-2 pl-5 pr-5 mt-2 duration-200 border-gray-400 border-2 text-gray-400 hover:bg-gray-600"><i class="fa-solid fa-plus text-gray-400"></i>&nbsp;Add subdomain</button>
-    </form>
     </div>
 </body>
 </html>

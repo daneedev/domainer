@@ -1,10 +1,10 @@
 const express = require('express');
-const { checkAuth } = require('../handlers/checkAuth');
+const { checkAuth, checkNotAuth } = require('../handlers/checkAuth');
 const router = express.Router();
 const router2 = express.Router()
 const Subdomain = require("../models/Subdomain")
 
-router.get("/", function (req, res) { 
+router.get("/", checkNotAuth, function (req, res) { 
     res.render(__dirname + "/../views/index.ejs", {domain: process.env.DOMAIN})
 })
 
