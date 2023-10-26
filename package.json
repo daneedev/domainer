@@ -18,10 +18,14 @@
   },
   "homepage": "https://github.com/domainerapp/domainer#readme",
   "dependencies": {
+    "bcrypt": "^5.1.1",
+    "connect-flash": "^0.1.1",
+    "cookie-session": "^2.0.0",
     "dotenv": "^16.3.1",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
     "mongoose": "^7.6.3",
-    "passport": "^0.6.0"
+    "passport": "^0.5.3",
+    "passport-local": "^1.0.0"
   }
 }
