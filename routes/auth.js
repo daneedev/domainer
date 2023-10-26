@@ -1,6 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const router2 = express.Router()
+const router3 = express.Router()
 const User = require("../models/User")
 const bcrypt = require("bcrypt")
 const passport = require("passport")
@@ -36,5 +37,11 @@ router2.post("/", checkNotAuth, async function (req, res) {
     }
 })
 
+router3.post("/", function (req, res) {
+    req.logOut()
+    res.redirect("/")
+})
+
 module.exports.login = router
 module.exports.register = router2
+module.exports.logout = router3

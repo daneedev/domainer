@@ -12,6 +12,10 @@ const subdomainSchema = new mongoose.Schema({
     pointedTo: {
         type: String,
         required: true,
+    },
+    recordType: {
+        type: String,
+        required: true
     }
 })
 
