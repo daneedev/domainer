@@ -7,13 +7,20 @@ const mongoose = require("mongoose")
 const flash = require("connect-flash")
 const session = require("cookie-session")
 const initializePassport = require("./handlers/passport")
-const { checkAuth, checkNotAuth } = require("./handlers/checkAuth")
+const { rateLimit } = require("express-rate-limit")
 
 app.set("view-engine", "ejs")
 
 app.use(express.static(path.join(__dirname, "public")))
 
 initializePassport(passport)
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 100
+})
+
+app.use(limiter)
 
 app.use(session({
     name: "logincookie",
@@ -51,5 +58,7 @@ app.use("/logout", require("./routes/auth").logout)
 app.use("/add", require("./routes/subdomains").add)
 app.use("/delete", require("./routes/subdomains").delete)
 app.use("/edit", require("./routes/subdomains").edit)
+
+app.use("/admin", require("./routes/admin").admin)
 
 app.listen(3000, () => console.log('Server running on port 3000'));
