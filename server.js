@@ -35,8 +35,6 @@ app.use(passport.session())
 
 app.use(flash())
 
-
-
 mongoose.connect(process.env.MONGO_SRV, {}).then(() => {
     console.log("Connected to the database!")
 }).catch((err) => {
@@ -48,8 +46,5 @@ app.use("/", require("./routes/home"))
 app.use("/login", require("./routes/auth").login)
 app.use("/register", require("./routes/auth").register)
 
-app.get("/dash", checkAuth, function (req, res) {
-    res.send("you are in dashboard")
-})
 
 app.listen(3000, () => console.log('Server running on port 3000'));
