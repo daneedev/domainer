@@ -6,10 +6,19 @@ const router3 = express.Router()
 const router4 = express.Router()
 const Subdomain = require("../models/Subdomain")
 const cf = require("../server").cf
+const axios = require("axios")
+const Stats = require("../models/stats")
+const updateStats = require("../handlers/updateStats")
+const User = require("../models/User")
 
 router.get("/", checkSetup, checkAuth, checkAdmin, async function (req, res) {
     const subdomains = await Subdomain.find().sort({status: 1})
-    res.render(__dirname + "/../views/admin.ejs", {subdomains: subdomains, message: req.flash("adminerror")})
+    const latestversion = await axios.get("https://version.daneeskripter.dev/domainer/version.txt").then((res) => {return res.data})
+    const stats = await Stats.findOne()
+    const currentversion = require("../package.json").version
+    const users = await User.find()
+    updateStats()
+    res.render(__dirname + "/../views/admin.ejs", {subdomains: subdomains, message: req.flash("adminerror"), stats: stats, latestversion: latestversion, currentversion: currentversion, users: users})
 })
 
 router2.post("/", checkSetup, checkAuth, checkAdmin, async function (req, res) {
