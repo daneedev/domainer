@@ -6,6 +6,7 @@ const User = require("../models/User")
 const bcrypt = require("bcrypt")
 const passport = require("passport")
 const { checkNotAuth, checkSetup, checkAuth } = require("../handlers/checkAuth")
+const Role = require("../models/Role")
 
 router.get("/", checkSetup, checkNotAuth, function (req, res) {
     res.render(__dirname + "/../views/login.ejs", {domain: process.env.DOMAIN, message: req.flash('error') })
@@ -18,19 +19,22 @@ router.post("/", checkSetup, checkNotAuth, passport.authenticate("local", {
 }))
 
 router2.get("/", checkSetup, checkNotAuth, function (req, res) {
-    res.render(__dirname + "/../views/register.ejs", {domain: process.env.DOMAIN})
+    res.render(__dirname + "/../views/register.ejs", {domain: process.env.DOMAIN, message: req.flash('error')})
 })
 
 router2.post("/", checkSetup, checkNotAuth, async function (req, res) {
     const findUser = await User.findOne({username: req.body.username})
     if (findUser) {
-
+        req.flash("error", "That username is already taken!")
+        res.redirect("/register")
     } else {
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
+        const role = await Role.findOne({default: true}).name
         const newUser = new User({
             username: req.body.username,
             password: hashedPassword,
-            isAdmin: false
+            isAdmin: false,
+            role: role
         })
         newUser.save().then(() => {
             res.redirect("/login")
