@@ -87,4 +87,8 @@ app.use("/approve", require("./routes/admin").approve)
 app.use("/decline", require("./routes/admin").decline)
 app.use("/toreview", require("./routes/admin").review)
 
+app.use("/deleteuser", require("./routes/usersRoles").deleteUser)
+app.use("/changerole", require("./routes/usersRoles").changeRole)
+
+
 app.listen(3000, () => console.log('Server running on port 3000'));
