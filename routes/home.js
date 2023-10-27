@@ -41,6 +41,7 @@ router3.post("/", checkNotSetup, async function (req, res) {
         console.log("Failed connect to the database!")
     })
     res.redirect("/")
+    process.exit()
 })
 
 module.exports.home = router;
