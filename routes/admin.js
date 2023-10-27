@@ -5,6 +5,7 @@ const router2 = express.Router()
 const router3 = express.Router()
 const router4 = express.Router()
 const Subdomain = require("../models/Subdomain")
+const cf = require("../server").cf
 
 router.get("/", checkAuth, checkAdmin, async function (req, res) {
     const subdomains = await Subdomain.find().sort({status: 1})
@@ -19,6 +20,16 @@ router2.post("/", checkAuth, checkAdmin, async function (req, res) {
             res.redirect("/admin")
         } else {
             await Subdomain.updateOne({subdomain: req.body.subdomain}, {status: 2})
+            cf.dnsRecords.add(process.env.CLOUDFLARE_ZONE_ID, {
+                type: findSubdomain.recordType,
+                name: findSubdomain.subdomain,
+                content: findSubdomain.pointedTo,
+                ttl: 1,
+                proxied: false,
+                proxiable: true,
+                locked: false
+
+            })
             res.redirect("/admin")
         }
     } else {
@@ -35,6 +46,12 @@ router3.post("/", checkAuth, checkAdmin, async function (req, res) {
             res.redirect("/admin")
         } else {
             await Subdomain.updateOne({subdomain: req.body.subdomain}, {status: 0})
+            if (findSubdomain.status == 2) {
+            cf.dnsRecords.browse(process.env.CLOUDFLARE_ZONE_ID).then((data) => {
+                const recordid = data.result.find(record => record.name == findSubdomain.subdomain).id
+                cf.dnsRecords.del(process.env.CLOUDFLARE_ZONE_ID, recordid)
+            })
+            }
             res.redirect("/admin")
         }
     } else {
@@ -51,6 +68,12 @@ router4.post("/", checkAuth, checkAdmin, async function (req, res) {
             res.redirect("/admin")
         } else {
             await Subdomain.updateOne({subdomain: req.body.subdomain}, {status: 1})
+            if (findSubdomain.status == 2) {
+                cf.dnsRecords.browse(process.env.CLOUDFLARE_ZONE_ID).then((data) => {
+                    const recordid = data.result.find(record => record.name == findSubdomain.subdomain).id
+                    cf.dnsRecords.del(process.env.CLOUDFLARE_ZONE_ID, recordid)
+                })
+                }
             res.redirect("/admin")
         }
     } else {

@@ -7,6 +7,7 @@ const { checkAuth } = require("../handlers/checkAuth")
 const { checkNotAuth } = require("../handlers/checkAuth")
 const RateLimit = require("express-rate-limit")
 const sanitize = require("sanitize-filename")
+const cf = require("../server").cf
 
 router.get("/", checkAuth, async function (req, res) {
     res.render(__dirname + "/../views/addsubdomain.ejs", {domain: process.env.DOMAIN, message: req.flash('domainerror')})
@@ -41,6 +42,12 @@ router2.post("/", checkAuth, async function (req, res) {
         res.redirect("/dash")
     } else {
         await Subdomain.deleteOne({subdomain: subdomain})
+        if (findSubdomain.status == 2) {
+            cf.dnsRecords.browse(process.env.CLOUDFLARE_ZONE_ID).then((data) => {
+                const recordid = data.result.find(record => record.name == findSubdomain.subdomain).id
+                cf.dnsRecords.del(process.env.CLOUDFLARE_ZONE_ID, recordid)
+            })
+        }
         res.redirect("/dash")
     }
 })
@@ -70,6 +77,18 @@ router3.post("/", checkAuth, editLimiter, async function (req, res) {
         res.redirect("/add")
     } else {
         await Subdomain.findOneAndUpdate({subdomain: subdomain}, {pointedTo: req.body.pointedto, recordType: req.body.recordType})
+        cf.dnsRecords.browse(process.env.CLOUDFLARE_ZONE_ID).then((data) => {
+            const recordid = data.result.find(record => record.name == findSubdomain.subdomain).id
+            cf.dnsRecords.edit(process.env.CLOUDFLARE_ZONE_ID, recordid, {
+                type: req.body.recordType,
+                name: findSubdomain.subdomain,
+                content: req.body.pointedto,
+                ttl: 1,
+                proxied: false,
+                proxiable: true,
+                locked: false
+            })
+        })
         res.redirect("/dash")
     }
 })

@@ -47,6 +47,12 @@ mongoose.connect(process.env.MONGO_SRV, {}).then(() => {
     console.log("Failed connect to the database!")
 })
 
+const cf = require("cloudflare")({
+    token: process.env.CLOUDFLARE_API_TOKEN
+})
+
+module.exports.cf = cf
+
 app.use("/", require("./routes/home").home)
 app.use("/dash", require("./routes/home").dash)
 
