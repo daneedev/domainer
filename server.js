@@ -8,6 +8,7 @@ const flash = require("connect-flash")
 const session = require("cookie-session")
 const initializePassport = require("./handlers/passport")
 const RateLimit = require("express-rate-limit")
+const updateStats = require("./handlers/updateStats")
 
 app.set("view-engine", "ejs")
 
@@ -52,6 +53,22 @@ const cf = require("cloudflare")({
 })
 
 module.exports.cf = cf
+
+updateStats()
+
+async function checkDefaultRole() {
+const Role = require("./models/Role")
+const findDefaultRole = await Role.findOne({name: "default"})
+if (!findDefaultRole) {
+const DefaultRole = new Role({
+  name: "default",
+  maxSubdomains: 5,
+  default: true
+})
+DefaultRole.save()
+}
+}
+checkDefaultRole()
 
 app.use("/setup", require("./routes/home").setup)
 app.use("/", require("./routes/home").home)

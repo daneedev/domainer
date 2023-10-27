@@ -10,6 +10,7 @@ const axios = require("axios")
 const Stats = require("../models/stats")
 const updateStats = require("../handlers/updateStats")
 const User = require("../models/User")
+const Role = require("../models/Role")
 
 router.get("/", checkSetup, checkAuth, checkAdmin, async function (req, res) {
     const subdomains = await Subdomain.find().sort({status: 1})
@@ -17,8 +18,9 @@ router.get("/", checkSetup, checkAuth, checkAdmin, async function (req, res) {
     const stats = await Stats.findOne()
     const currentversion = require("../package.json").version
     const users = await User.find()
+    const roles = await Role.find()
     updateStats()
-    res.render(__dirname + "/../views/admin.ejs", {subdomains: subdomains, message: req.flash("adminerror"), stats: stats, latestversion: latestversion, currentversion: currentversion, users: users})
+    res.render(__dirname + "/../views/admin.ejs", {subdomains: subdomains, message: req.flash("adminerror"), stats: stats, latestversion: latestversion, currentversion: currentversion, users: users, roles: roles})
 })
 
 router2.post("/", checkSetup, checkAuth, checkAdmin, async function (req, res) {
