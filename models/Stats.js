@@ -20,6 +20,10 @@ const statsSchema = new mongoose.Schema({
     totalUsers: {
         type: Number,
         required: true
+    },
+    totalRoles: {
+        type: Number,
+        required: true
     }
 })
 
