@@ -1,5 +1,5 @@
 const express = require('express');
-const { checkAdmin, checkAuth } = require('../handlers/checkAuth');
+const { checkAdmin, checkAuth, checkSetup } = require('../handlers/checkAuth');
 const router = express.Router();
 const router2 = express.Router()
 const router3 = express.Router()
@@ -7,12 +7,12 @@ const router4 = express.Router()
 const Subdomain = require("../models/Subdomain")
 const cf = require("../server").cf
 
-router.get("/", checkAuth, checkAdmin, async function (req, res) {
+router.get("/", checkSetup, checkAuth, checkAdmin, async function (req, res) {
     const subdomains = await Subdomain.find().sort({status: 1})
     res.render(__dirname + "/../views/admin.ejs", {subdomains: subdomains, message: req.flash("adminerror")})
 })
 
-router2.post("/", checkAuth, checkAdmin, async function (req, res) {
+router2.post("/", checkSetup, checkAuth, checkAdmin, async function (req, res) {
     const findSubdomain = await Subdomain.findOne({subdomain: req.body.subdomain})
     if (findSubdomain) {
         if (findSubdomain.status == 2) {
@@ -38,7 +38,7 @@ router2.post("/", checkAuth, checkAdmin, async function (req, res) {
     }
 })
 
-router3.post("/", checkAuth, checkAdmin, async function (req, res) {
+router3.post("/", checkSetup, checkAuth, checkAdmin, async function (req, res) {
     const findSubdomain = await Subdomain.findOne({subdomain: req.body.subdomain})
     if (findSubdomain) {
         if (findSubdomain.status == 0) {
@@ -60,7 +60,7 @@ router3.post("/", checkAuth, checkAdmin, async function (req, res) {
     }
 })
 
-router4.post("/", checkAuth, checkAdmin, async function (req, res) {
+router4.post("/", checkSetup, checkAuth, checkAdmin, async function (req, res) {
     const findSubdomain = await Subdomain.findOne({subdomain: req.body.subdomain})
     if (findSubdomain) {
         if (findSubdomain.status == 1) {

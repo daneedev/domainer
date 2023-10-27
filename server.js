@@ -53,6 +53,7 @@ const cf = require("cloudflare")({
 
 module.exports.cf = cf
 
+app.use("/setup", require("./routes/home").setup)
 app.use("/", require("./routes/home").home)
 app.use("/dash", require("./routes/home").dash)
 

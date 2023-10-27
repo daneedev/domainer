@@ -3,17 +3,16 @@ const router = express.Router()
 const router2 = express.Router()
 const router3 = express.Router()
 const Subdomain = require("../models/Subdomain")
-const { checkAuth } = require("../handlers/checkAuth")
-const { checkNotAuth } = require("../handlers/checkAuth")
+const { checkAuth, checkSetup } = require("../handlers/checkAuth")
 const RateLimit = require("express-rate-limit")
 const sanitize = require("sanitize-filename")
 const cf = require("../server").cf
 
-router.get("/", checkAuth, async function (req, res) {
+router.get("/", checkSetup, checkAuth, async function (req, res) {
     res.render(__dirname + "/../views/addsubdomain.ejs", {domain: process.env.DOMAIN, message: req.flash('domainerror')})
 })
 
-router.post("/", checkAuth, async function (req, res) {
+router.post("/", checkSetup, checkAuth, async function (req, res) {
     const findSubdomain = await Subdomain.findOne({subdomain: req.body.subdomain})
     if (findSubdomain) {
         req.flash("domainerror", "That subdomain already exists!")
@@ -35,7 +34,7 @@ router.post("/", checkAuth, async function (req, res) {
     }
 })
 
-router2.post("/", checkAuth, async function (req, res) {
+router2.post("/", checkSetup, checkAuth, async function (req, res) {
     const subdomain = req.body.subdomain
     const findSubdomain = await Subdomain.findOne({subdomain: subdomain})
     if (findSubdomain.owner != req.user.username) {
@@ -52,7 +51,7 @@ router2.post("/", checkAuth, async function (req, res) {
     }
 })
 
-router3.get("/", checkAuth, async function (req, res) {
+router3.get("/", checkSetup, checkAuth, async function (req, res) {
     const subdomain = sanitize(req.query.subdomain)
     const findSubdomain = await Subdomain.findOne({subdomain: subdomain})
     if (findSubdomain.owner != req.user.username) {
@@ -67,7 +66,7 @@ const editLimiter = RateLimit({
     max: 1
 })
 
-router3.post("/", checkAuth, editLimiter, async function (req, res) {
+router3.post("/", checkSetup, checkAuth, editLimiter, async function (req, res) {
     const subdomain = req.body.subdomain
     const findSubdomain = await Subdomain.findOne({subdomain: subdomain})
     if (findSubdomain.owner != req.user.username) {

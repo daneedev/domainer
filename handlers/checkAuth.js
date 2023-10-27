@@ -19,6 +19,25 @@ function checkAdmin(req, res, next) {
     res.redirect("/dash")
 }
 
+function checkSetup(req, res, next) {
+    if (process.env.SETUPED == "yes") {
+        next()
+      } else {
+        res.redirect("/setup")
+      }
+}
+
+function checkNotSetup(req, res, next) {
+    if (process.env.SETUPED == "yes") {
+        res.redirect("/")
+      } else {
+        next()
+      }
+
+}
+
 module.exports.checkAuth = checkAuth
 module.exports.checkNotAuth = checkNotAuth
 module.exports.checkAdmin = checkAdmin
+module.exports.checkSetup = checkSetup
+module.exports.checkNotSetup = checkNotSetup
