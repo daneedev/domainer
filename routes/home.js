@@ -7,6 +7,8 @@ const Subdomain = require("../models/Subdomain")
 const fs = require('fs');
 const dotenv = require('dotenv');
 const mongoose = require("mongoose")
+const User = require("../models/User")
+const Role = require("../models/Role")
 
 router.get("/", checkSetup, checkNotAuth, function (req, res) {
 
@@ -15,7 +17,9 @@ router.get("/", checkSetup, checkNotAuth, function (req, res) {
 
 router2.get("/", checkSetup, checkAuth, async function (req, res) {
     const subdomains = await Subdomain.find({owner: req.user.username}).sort({status: 1})
-    res.render(__dirname + "/../views/dash.ejs", {domain: process.env.DOMAIN, subdomains: subdomains, user: req.user})
+    const user = await User.findOne({username: req.user.username})
+    const role = await Role.findOne({ name: user.role})
+    res.render(__dirname + "/../views/dash.ejs", {domain: process.env.DOMAIN, subdomains: subdomains, user: req.user, subdomainsLimit: role.maxSubdomains, subdomainsCount: user.subdomainsCount})
 })
 
 router3.get("/", checkNotSetup, async function (req, res) {

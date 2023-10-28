@@ -24,7 +24,7 @@ app.use(limiter);
 
 app.use(session({
     name: "logincookie",
-    keys: [process.env.SESSION_SECRET],
+    keys: [process.env.SESSION_SECRET || "setupsecret"],
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -54,8 +54,8 @@ const cf = require("cloudflare")({
 
 module.exports.cf = cf
 
-updateStats()
-
+//updateStats()
+/*
 async function checkDefaultRole() {
 const Role = require("./models/Role")
 const findDefaultRole = await Role.findOne({name: "default"})
@@ -69,7 +69,7 @@ DefaultRole.save()
 }
 }
 checkDefaultRole()
-
+*/
 app.use("/setup", require("./routes/home").setup)
 app.use("/", require("./routes/home").home)
 app.use("/dash", require("./routes/home").dash)

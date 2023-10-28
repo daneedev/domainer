@@ -21,6 +21,7 @@
             <button type="submit" class="rounded-2xl pt-2 pb-2 pl-5 pr-5 ml-2 mt-2 duration-200 border-gray-400 border-2 text-gray-400 hover:bg-gray-600"><i class="fa-solid fa-right-from-bracket"></i>&nbsp;Logout</button>
         </form>
     </div>
+    <h1 class="text-xl font-bold text-gray-100 ml-2">Subdomains usage: <%= subdomainsCount %>/<%= subdomainsLimit %></h1>
     <% subdomains.forEach((subdomain) => { %>
         <div class="flex flex-row justify-between items-center w-5/6 bg-gray-700 rounded-2xl pt-3 pb-3 mt-2">
             <div class="flex flex-col text-center ml-5">

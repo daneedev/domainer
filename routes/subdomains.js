@@ -7,6 +7,8 @@ const { checkAuth, checkSetup } = require("../handlers/checkAuth")
 const RateLimit = require("express-rate-limit")
 const sanitize = require("sanitize-filename")
 const cf = require("../server").cf
+const User = require("../models/User")
+const Role = require("../models/Role")
 
 router.get("/", checkSetup, checkAuth, async function (req, res) {
     res.render(__dirname + "/../views/addsubdomain.ejs", {domain: process.env.DOMAIN, message: req.flash('domainerror')})
@@ -21,6 +23,12 @@ router.post("/", checkSetup, checkAuth, async function (req, res) {
         req.flash("domainerror", `That subdomain doesn't contain ${process.env.DOMAIN}!`)
         res.redirect("/add")
     } else {
+        const user = await User.findOne({username: req.user.username})
+        const role = await Role.findOne({name: user.role})
+        if (user.subdomainsCount >= role.maxSubdomains) {
+            req.flash("domainerror", `You can't have more than ${role.maxSubdomains} subdomains!`)
+            res.redirect("/add")
+        } else {
         const newSubdomain = new Subdomain({
             subdomain: req.body.subdomain,
             owner: req.user.username,
@@ -28,9 +36,11 @@ router.post("/", checkSetup, checkAuth, async function (req, res) {
             recordType: req.body.recordType,
             status: 1
         })
+        await User.updateOne({username: req.user.username}, {subdomainsCount: user.subdomainsCount + 1})
         newSubdomain.save().then(() => {
             res.redirect("/dash")
         })
+    }
     }
 })
 
@@ -41,6 +51,8 @@ router2.post("/", checkSetup, checkAuth, async function (req, res) {
         res.redirect("/dash")
     } else {
         await Subdomain.deleteOne({subdomain: subdomain})
+        const user = await User.findOne({username: req.user.username})
+        await User.updateOne({username: req.user.username}, {subdomainsCount: user.subdomainsCount - 1})
         if (findSubdomain.status == 2) {
             cf.dnsRecords.browse(process.env.CLOUDFLARE_ZONE_ID).then((data) => {
                 const recordid = data.result.find(record => record.name == findSubdomain.subdomain).id

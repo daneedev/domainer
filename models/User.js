@@ -19,6 +19,10 @@ const userSchema = new mongoose.Schema({
     role: {
         type: String,
         required: true
+    },
+    subdomainsCount: {
+        type: Number,
+        required: true
     }
 })
 

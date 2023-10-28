@@ -34,7 +34,8 @@ router2.post("/", checkSetup, checkNotAuth, async function (req, res) {
             username: req.body.username,
             password: hashedPassword,
             isAdmin: false,
-            role: role
+            role: role,
+            subdomainsCount: 0
         })
         newUser.save().then(() => {
             res.redirect("/login")
