@@ -6,6 +6,7 @@ const router2 = express.Router()
 const Role = require("../models/Role")
 const router3 = express.Router()
 const router4 = express.Router()
+const router5 = express.Router()
 
 router.post("/", checkAuth, checkAdmin, async function (req, res) {
     const findUser = await User.findOne({username: req.body.username})
@@ -85,7 +86,30 @@ router4.post("/", checkAuth, checkAdmin, async function (req, res) {
     }
 })
 
+router5.get("/", checkAuth, checkAdmin, async function (req, res) {
+    res.render(__dirname + "/../views/addrole.ejs", {})
+})
+
+router5.post("/", checkAuth, checkAdmin, async function (req, res) {
+    const name = req.body.role
+    const maxSubdomains = req.body.maxSubdomains
+    const findRole = await Role.findOne({name: name})
+    if (findRole) {
+        req.flash("adminerror", "That role already exists!")
+        res.redirect("/admin")
+    } else {
+        const newRole = new Role({
+            name: name,
+            maxSubdomains: maxSubdomains,
+            default: false
+        })
+        newRole.save()
+        res.redirect("/admin")
+    }
+})
+
 module.exports.deleteUser = router
 module.exports.changeRole = router2
 module.exports.deleteRole = router3
 module.exports.editRole = router4
+module.exports.addRole = router5

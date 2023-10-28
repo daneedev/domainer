@@ -91,5 +91,6 @@ app.use("/deleteuser", require("./routes/usersRoles").deleteUser)
 app.use("/changerole", require("./routes/usersRoles").changeRole)
 app.use("/deleterole", require("./routes/usersRoles").deleteRole)
 app.use("/editrole", require("./routes/usersRoles").editRole)
+app.use("/addrole", require("./routes/usersRoles").addRole)
 
 app.listen(3000, () => console.log('Server running on port 3000'));
