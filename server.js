@@ -14,7 +14,6 @@ app.set("view-engine", "ejs")
 
 app.use(express.static(path.join(__dirname, "public")))
 
-app.use("/setup", require("./routes/home").setup)
 
 const limiter = RateLimit({
   windowMs: 15*60*1000,
@@ -69,7 +68,7 @@ const cf = require("cloudflare")({
 
 module.exports.cf = cf
 
-
+app.use("/setup", require("./routes/home").setup)
 
 app.use("/setup", require("./routes/home").setup)
 app.use("/", require("./routes/home").home)
