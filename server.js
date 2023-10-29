@@ -14,7 +14,7 @@ app.set("view-engine", "ejs")
 
 app.use(express.static(path.join(__dirname, "public")))
 
-initializePassport(passport)
+app.use("/setup", require("./routes/home").setup)
 
 const limiter = RateLimit({
   windowMs: 15*60*1000,
@@ -22,9 +22,11 @@ const limiter = RateLimit({
 });
 app.use(limiter);
 
+if (process.env.SETUPED == "yes") {
+initializePassport(passport)
 app.use(session({
     name: "logincookie",
-    keys: [process.env.SESSION_SECRET || "setupsecret"],
+    keys: [process.env.SESSION_SECRET],
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -34,12 +36,10 @@ app.use(session({
       maxAge: 86400000
     }
   }))
-
+  app.use(passport.initialize())
+  app.use(passport.session())
+}
 app.use(express.urlencoded({ extended: false }))
-
-app.use(passport.initialize())
-app.use(passport.session())
-
 app.use(flash())
 
 mongoose.connect(process.env.MONGO_SRV, {}).then(() => {
