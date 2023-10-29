@@ -1,5 +1,5 @@
 async function updateStats() {
-    const Stats = require("../models/stats")
+    const Stats = require("../models/Stats")
     const Subdomain = require("../models/Subdomain")
     const User = require("../models/User")
     const Role = require("../models/Role")

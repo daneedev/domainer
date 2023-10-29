@@ -38,6 +38,21 @@ app.use(session({
   }))
   app.use(passport.initialize())
   app.use(passport.session())
+  updateStats()
+
+async function checkDefaultRole() {
+const Role = require("./models/Role")
+const findDefaultRole = await Role.findOne({name: "default"})
+if (!findDefaultRole) {
+const DefaultRole = new Role({
+  name: "default",
+  maxSubdomains: 5,
+  default: true
+})
+DefaultRole.save()
+}
+}
+checkDefaultRole()
 }
 app.use(express.urlencoded({ extended: false }))
 app.use(flash())
@@ -54,22 +69,8 @@ const cf = require("cloudflare")({
 
 module.exports.cf = cf
 
-//updateStats()
-/*
-async function checkDefaultRole() {
-const Role = require("./models/Role")
-const findDefaultRole = await Role.findOne({name: "default"})
-if (!findDefaultRole) {
-const DefaultRole = new Role({
-  name: "default",
-  maxSubdomains: 5,
-  default: true
-})
-DefaultRole.save()
-}
-}
-checkDefaultRole()
-*/
+
+
 app.use("/setup", require("./routes/home").setup)
 app.use("/", require("./routes/home").home)
 app.use("/dash", require("./routes/home").dash)
