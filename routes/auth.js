@@ -32,6 +32,7 @@ router2.post("/", checkSetup, checkNotAuth, async function (req, res) {
         const role = await Role.findOne({default: true}).name
         const newUser = new User({
             username: req.body.username,
+            email: req.body.email,
             password: hashedPassword,
             isAdmin: false,
             role: role,
