@@ -3,6 +3,7 @@ name: Docker Image DEV
 on:
   push:
     branches: [ "dev" ]
+  workflow_dispatch:
 
 jobs:
   build:
