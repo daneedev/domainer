@@ -7,6 +7,9 @@ const Role = require("../models/Role")
 const router3 = express.Router()
 const router4 = express.Router()
 const router5 = express.Router()
+const router6 = express.Router()
+const bcrypt = require("bcrypt")
+const Subdomain = require("../models/Subdomain")
 
 router.post("/", checkAuth, checkAdmin, async function (req, res) {
     const findUser = await User.findOne({username: req.body.username})
@@ -108,8 +111,35 @@ router5.post("/", checkAuth, checkAdmin, async function (req, res) {
     }
 })
 
+router6.get("/", checkAuth, async function (req, res) {
+    const user = await User.findOne({username: req.user.username})
+    res.render(__dirname + "/../views/manage.ejs", {user: user})
+})
+
+router6.get("/edit", checkAuth, async function (req, res) {
+    const user = await User.findOne({username: req.user.username})
+    res.render(__dirname + "/../views/edituser.ejs", {user: user, message: req.flash("editerror")})
+})
+
+router6.post("/edit", checkAuth, async function (req, res) {
+    const findUser = await User.findOne({username: req.body.username})
+    if (findUser) {
+        req.flash("editerror", "That username is already taken!")
+        res.redirect("/manage/edit")
+    } else {
+        const hashedPassword = await bcrypt.hash(req.body.password, 10)
+        await User.updateOne({username: req.user.username}, {username: req.body.username, email: req.body.email, password: hashedPassword})
+        await (await Subdomain.find({owner: req.user.username})).forEach((subdomain) => {
+            subdomain.owner = req.body.username
+            subdomain.save()
+        })
+        req.logOut()
+        res.redirect("/login")
+    }
+})
 module.exports.deleteUser = router
 module.exports.changeRole = router2
 module.exports.deleteRole = router3
 module.exports.editRole = router4
 module.exports.addRole = router5
+module.exports.manage = router6
