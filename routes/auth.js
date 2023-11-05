@@ -27,15 +27,18 @@ router2.post("/", checkSetup, checkNotAuth, async function (req, res) {
     if (findUser) {
         req.flash("error", "That username is already taken!")
         res.redirect("/register")
+    } else if (req.body.password.length < 8) { 
+        req.flash("error", "Password must be at least 8 characters!")
+        res.redirect("/register")
     } else {
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
-        const role = await Role.findOne({default: true}).name
+        const role = await Role.findOne({default: true})
         const newUser = new User({
             username: req.body.username,
             email: req.body.email,
             password: hashedPassword,
             isAdmin: false,
-            role: role,
+            role: role.name,
             subdomainsCount: 0
         })
         newUser.save().then(() => {
