@@ -10,6 +10,7 @@ const router5 = express.Router()
 const router6 = express.Router()
 const bcrypt = require("bcrypt")
 const Subdomain = require("../models/Subdomain")
+const sanitize = require("sanitize-filename")
 
 router.post("/", checkAuth, checkAdmin, async function (req, res) {
     const findUser = await User.findOne({username: req.body.username})
@@ -61,7 +62,7 @@ router3.post("/", checkAuth, checkAdmin, async function (req, res) {
 })
 
 router4.get("/", checkAuth, checkAdmin, async function (req, res) {
-    const role = req.query.role
+    const role = sanitize(req.query.role)
     const findRole = await Role.findOne({name: role})
     if (!findRole) {
         req.flash("adminerror", "That role doesn't exist!")
