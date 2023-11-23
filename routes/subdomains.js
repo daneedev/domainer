@@ -74,8 +74,8 @@ router3.get("/", checkSetup, checkAuth, async function (req, res) {
 })
 
 const editLimiter = RateLimit({
-    windowMs: 60 * 60 * 1000,
-    max: 1
+    windowMs: 5 * 60 * 1000,
+    max: 500
 })
 
 router3.post("/", checkSetup, checkAuth, editLimiter, async function (req, res) {
