@@ -1,4 +1,4 @@
-require("dotenv").config()
+require("dotenv").config({path: __dirname + "/data/.env"})
 const express = require('express');
 const app = express();
 const passport = require('passport');
@@ -63,6 +63,7 @@ const cf = require("cloudflare")({
     token: process.env.CLOUDFLARE_API_TOKEN
 })
 
+console.log(process.env.CLOUDFLARE_API_TOKEN)
 module.exports.cf = cf
 
 app.use("/setup", require("./routes/home").setup)

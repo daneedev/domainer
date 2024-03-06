@@ -5,7 +5,6 @@ const router2 = express.Router()
 const router3 = express.Router()
 const Subdomain = require("../models/Subdomain")
 const fs = require('fs');
-const dotenv = require('dotenv');
 const User = require("../models/User")
 const Role = require("../models/Role")
 
@@ -31,13 +30,13 @@ router3.post("/", checkNotSetup, async function (req, res) {
     const sessionsecret = req.body.sessionsecret
     const cftoken = req.body.cftoken
     const cfzone = req.body.cfzone
-    fs.writeFileSync(__dirname + '/../.env', `\nMONGO_SRV=${mongosrv}\n`, { flag: 'a' });
-    fs.writeFileSync(__dirname + '/../.env', `DOMAIN=${domain}\n`, { flag: 'a' });
-    fs.writeFileSync(__dirname + '/../.env', `SESSION_SECRET=${sessionsecret}\n`, { flag: 'a' });
-    fs.writeFileSync(__dirname + '/../.env', `CLOUDFLARE_API_TOKEN=${cftoken}\n`, { flag: 'a' });
-    fs.writeFileSync(__dirname + '/../.env', `CLOUDFLARE_ZONE_ID=${cfzone}\n`, { flag: 'a' });
-    fs.writeFileSync(__dirname + '/../.env', `SETUPED=yes\n`, { flag: 'a' });
-    dotenv.config()
+    fs.writeFileSync(__dirname + '/../data/.env', `\nMONGO_SRV=${mongosrv}\n`, { flag: 'a' });
+    fs.writeFileSync(__dirname + '/../data/.env', `DOMAIN=${domain}\n`, { flag: 'a' });
+    fs.writeFileSync(__dirname + '/../data/.env', `SESSION_SECRET=${sessionsecret}\n`, { flag: 'a' });
+    fs.writeFileSync(__dirname + '/../data/.env', `CLOUDFLARE_API_TOKEN=${cftoken}\n`, { flag: 'a' });
+    fs.writeFileSync(__dirname + '/../data/.env', `CLOUDFLARE_ZONE_ID=${cfzone}\n`, { flag: 'a' });
+    fs.writeFileSync(__dirname + '/../data/.env', `SETUPED=yes\n`, { flag: 'a' });
+    require("dotenv").config({path: __dirname + "/data/.env"})
     res.redirect("/")
     process.exit()
 })
