@@ -1,20 +1,25 @@
-const mongoose = require("mongoose")
+const {Model, DataTypes} = require("sequelize")
+const database = require("../database")
 
-const roleSchema = new mongoose.Schema({
+const Role = database.define("role", {
     name: {
-        type: String,
-        required: true
+        type: DataTypes.STRING,
+        allowNull: false
     },
     maxSubdomains: {
-        type: Number,
-        required: true
+        type: DataTypes.INTEGER,
+        allowNull: false
     },
     default: {
-        type: Boolean,
-        required: true
+        type: DataTypes.BOOLEAN,
+        allowNull: false
     }
+}, {
+    modelName: "role",
+    tableName: "roles",
+    timestamps: false
 })
 
-const model = mongoose.model("roles", roleSchema)
+Role.sync()
 
-module.exports = model
+module.exports = Role;

@@ -1,32 +1,37 @@
-const mongoose = require("mongoose")
+const {Model, DataTypes} = require("sequelize")
+const database = require("../database")
 
-const statsSchema = new mongoose.Schema({
+const stats = database.define("stats", {
     allSubdomains: {
-        type: Number,
-        required: true
+        type: DataTypes.INTEGER,
+        allowNull: false
     },
     approvedSubdomains: {
-        type: Number,
-        required: true
+        type: DataTypes.INTEGER,
+        allowNull: false
     },
     declinedSubdomains: {
-        type: Number,
-        required: true
+        type: DataTypes.INTEGER,
+        allowNull: false
     },
     pendingReviewSubdomains: {
-        type: Number,
-        required: true
+        type: DataTypes.INTEGER,
+        allowNull: false
     },
     totalUsers: {
-        type: Number,
-        required: true
+        type: DataTypes.INTEGER,
+        allowNull: false
     },
     totalRoles: {
-        type: Number,
-        required: true
+        type: DataTypes.INTEGER,
+        allowNull: false
     }
+}, {
+    modelName: "stats",
+    tableName: "stats",
+    timestamps: false
 })
 
-const model = mongoose.model("stats", statsSchema)
+stats.sync()
 
-module.exports = model
+module.exports = stats;
