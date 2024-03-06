@@ -15,7 +15,7 @@ router.get("/", checkSetup, checkAuth, async function (req, res) {
 })
 
 router.post("/", checkSetup, checkAuth, async function (req, res) {
-    const findSubdomain = await Subdomain.findOne({subdomain: req.body.subdomain})
+    const findSubdomain = await Subdomain.findOne({where:{subdomain: req.body.subdomain}})
     if (findSubdomain) {
         req.flash("domainerror", "That subdomain already exists!")
         res.redirect("/add")
@@ -23,36 +23,37 @@ router.post("/", checkSetup, checkAuth, async function (req, res) {
         req.flash("domainerror", `That subdomain doesn't contain ${process.env.DOMAIN}!`)
         res.redirect("/add")
     } else {
-        const user = await User.findOne({username: req.user.username})
-        const role = await Role.findOne({name: user.role})
+        const user = await User.findOne({where:{username: req.user.username}})
+        const role = await Role.findOne({where:{name: user.role}})
         if (user.subdomainsCount >= role.maxSubdomains) {
             req.flash("domainerror", `You can't have more than ${role.maxSubdomains} subdomains!`)
             res.redirect("/add")
         } else {
-        const newSubdomain = new Subdomain({
+        Subdomain.create({
             subdomain: req.body.subdomain,
             owner: req.user.username,
             pointedTo: req.body.pointedto,
             recordType: req.body.recordType,
             status: 1
         })
-        await User.updateOne({username: req.user.username}, {subdomainsCount: user.subdomainsCount + 1})
-        newSubdomain.save().then(() => {
-            res.redirect("/dash")
-        })
+        const user = await User.findOne({username: req.user.username})
+        user.subdomainsCount++
+        user.save()
+        res.redirect("/dash")
     }
     }
 })
 
 router2.post("/", checkSetup, checkAuth, async function (req, res) {
     const subdomain = req.body.subdomain
-    const findSubdomain = await Subdomain.findOne({subdomain: subdomain})
+    const findSubdomain = await Subdomain.findOne({where:{subdomain: subdomain}})
     if (findSubdomain.owner != req.user.username) {
         res.redirect("/dash")
     } else {
-        await Subdomain.deleteOne({subdomain: subdomain})
-        const user = await User.findOne({username: req.user.username})
-        await User.updateOne({username: req.user.username}, {subdomainsCount: user.subdomainsCount - 1})
+        await Subdomain.destroy({where:{subdomain: subdomain}})
+        const user = await User.findOne({where:{username: req.user.username}})
+        user.subdomainsCount--
+        user.save()
         if (findSubdomain.status == 2) {
             cf.dnsRecords.browse(process.env.CLOUDFLARE_ZONE_ID).then((data) => {
                 const recordid = data.result.find(record => record.name == findSubdomain.subdomain).id
@@ -65,7 +66,7 @@ router2.post("/", checkSetup, checkAuth, async function (req, res) {
 
 router3.get("/", checkSetup, checkAuth, async function (req, res) {
     const subdomain = sanitize(req.query.subdomain)
-    const findSubdomain = await Subdomain.findOne({subdomain: subdomain})
+    const findSubdomain = await Subdomain.findOne({where:{subdomain: subdomain}})
     if (findSubdomain.owner != req.user.username) {
         res.redirect("/dash")
     } else {
@@ -80,14 +81,17 @@ const editLimiter = RateLimit({
 
 router3.post("/", checkSetup, checkAuth, editLimiter, async function (req, res) {
     const subdomain = req.body.subdomain
-    const findSubdomain = await Subdomain.findOne({subdomain: subdomain})
+    const findSubdomain = await Subdomain.findOne({where:{subdomain: subdomain}})
     if (findSubdomain.owner != req.user.username) {
         res.redirect("/dash")
     } else if (!req.body.subdomain.includes(process.env.DOMAIN)) {
         req.flash("editerror", `That subdomain doesn't contain ${process.env.DOMAIN}!`)
         res.redirect("/add")
     } else {
-        await Subdomain.findOneAndUpdate({subdomain: subdomain}, {pointedTo: req.body.pointedto, recordType: req.body.recordType})
+        const updateSubdomain = await Subdomain.findOne({where:{subdomain: subdomain}})
+        updateSubdomain.pointedTo = req.body.pointedto
+        updateSubdomain.recordType = req.body.recordType
+        updateSubdomain.save()
         cf.dnsRecords.browse(process.env.CLOUDFLARE_ZONE_ID).then((data) => {
             const recordid = data.result.find(record => record.name == findSubdomain.subdomain).id
             cf.dnsRecords.edit(process.env.CLOUDFLARE_ZONE_ID, recordid, {

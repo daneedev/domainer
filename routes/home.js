@@ -6,7 +6,6 @@ const router3 = express.Router()
 const Subdomain = require("../models/Subdomain")
 const fs = require('fs');
 const dotenv = require('dotenv');
-const mongoose = require("mongoose")
 const User = require("../models/User")
 const Role = require("../models/Role")
 
@@ -16,9 +15,9 @@ router.get("/", checkSetup, checkNotAuth, function (req, res) {
 })
 
 router2.get("/", checkSetup, checkAuth, async function (req, res) {
-    const subdomains = await Subdomain.find({owner: req.user.username}).sort({status: 1})
-    const user = await User.findOne({username: req.user.username})
-    const role = await Role.findOne({ name: user.role})
+    const subdomains = await Subdomain.findAll({where:{owner: req.user.username}})
+    const user = await User.findOne({where:{username: req.user.username}})
+    const role = await Role.findOne({where: { name: user.role}})
     res.render(__dirname + "/../views/dash.ejs", {domain: process.env.DOMAIN, subdomains: subdomains, user: req.user, subdomainsLimit: role.maxSubdomains, subdomainsCount: user.subdomainsCount})
 })
 
@@ -39,11 +38,6 @@ router3.post("/", checkNotSetup, async function (req, res) {
     fs.writeFileSync(__dirname + '/../.env', `CLOUDFLARE_ZONE_ID=${cfzone}\n`, { flag: 'a' });
     fs.writeFileSync(__dirname + '/../.env', `SETUPED=yes\n`, { flag: 'a' });
     dotenv.config()
-    mongoose.connect(process.env.MONGO_SRV, {}).then(() => {
-        console.log("Connected to the database!")
-    }).catch((err) => {
-        console.log("Failed connect to the database!")
-    })
     res.redirect("/")
     process.exit()
 })

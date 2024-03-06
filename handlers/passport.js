@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt")
 
 function initialize(passport) {
     const authUser = async (username, password, done) => {
-        const findUser = await User.findOne({ username: username})
+        const findUser = await User.findOne({where: {username: username}})
         if (!findUser) {
             return done(null, false, { message: "Username or password is incorrect"})
         } 
@@ -17,6 +17,7 @@ function initialize(passport) {
         } catch (err) {
             return done(err)
         }
+        return done(null, findUser)
     }
     passport.use(new LocalStrategy({}, authUser))
     passport.serializeUser(function(user, done) {
