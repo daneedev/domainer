@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domainer | Create admin user</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.7/tailwind.min.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body class="bg-gray-800">
+    <div class="flex w-screen h-screen flex-col items-center justify-between">
+        <div class="flex flex-col justify-center items-center w-screen h-5/6">
+        <div class="welcome-card w-auto p-3 h-auto rounded-2xl flex flex-col justify-center items-center bg-gray-700">
+            <div class="flex flex-col text-center">
+                <h1 class="text-gray-100 font-bold text-3xl">Create admin user</h1>
+                <form action="/setup2" method="post" class="flex flex-col text-center justify-center items-center">
+                    <label for="username" class="text-gray-100 font-bold text-lg">Username</label>
+                    <input type="text" id="username" name="username" class="rounded-2xl text-lg text-center" required>  
+                    <label for="email" class="text-gray-100 font-bold text-lg">Email</label>
+                    <input type="text" id="email" name="email" class="rounded-2xl text-lg text-center" required>
+                    <label for="password" class="text-gray-100 font-bold text-lg">Password</label>
+                    <input type="password" id="password" name="password" class="rounded-2xl text-lg text-center" required>
+                    <button type="submit" class="rounded-2xl bg-gray-100 w-1/2 h-8 mt-2 duration-200 hover:bg-gray-200">Create account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+</body>
+</html>

@@ -63,12 +63,12 @@ const cf = require("cloudflare")({
     token: process.env.CLOUDFLARE_API_TOKEN
 })
 
-console.log(process.env.CLOUDFLARE_API_TOKEN)
 module.exports.cf = cf
 
 app.use("/setup", require("./routes/home").setup)
 
 app.use("/setup", require("./routes/home").setup)
+app.use("/setup2", require("./routes/home").setup2)
 app.use("/", require("./routes/home").home)
 app.use("/dash", require("./routes/home").dash)
 
