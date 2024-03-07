@@ -1,9 +1,8 @@
-require("dotenv").config()
+require("dotenv").config({path: __dirname + "/data/.env"})
 const express = require('express');
 const app = express();
 const passport = require('passport');
 const path = require("path")
-const mongoose = require("mongoose")
 const flash = require("connect-flash")
 const session = require("cookie-session")
 const initializePassport = require("./handlers/passport")
@@ -20,6 +19,11 @@ const limiter = RateLimit({
   max: 100
 });
 app.use(limiter);
+
+// SYNC DB
+const sequelize = require('./database');
+
+sequelize.sync().then(() => console.log("Database is ready!"))
 
 if (process.env.SETUPED == "yes") {
 initializePassport(passport)
@@ -41,26 +45,19 @@ app.use(session({
 
 async function checkDefaultRole() {
 const Role = require("./models/Role")
-const findDefaultRole = await Role.findOne({name: "default"})
+const findDefaultRole = await Role.findOne({where:{name: "default"}})
 if (!findDefaultRole) {
-const DefaultRole = new Role({
+Role.create({
   name: "default",
   maxSubdomains: 5,
   default: true
 })
-DefaultRole.save()
 }
 }
 checkDefaultRole()
 }
 app.use(express.urlencoded({ extended: false }))
 app.use(flash())
-
-mongoose.connect(process.env.MONGO_SRV, {}).then(() => {
-    console.log("Connected to the database!")
-}).catch((err) => {
-    console.log("Failed connect to the database!")
-})
 
 const cf = require("cloudflare")({
     token: process.env.CLOUDFLARE_API_TOKEN
@@ -71,6 +68,7 @@ module.exports.cf = cf
 app.use("/setup", require("./routes/home").setup)
 
 app.use("/setup", require("./routes/home").setup)
+app.use("/setup2", require("./routes/home").setup2)
 app.use("/", require("./routes/home").home)
 app.use("/dash", require("./routes/home").dash)
 

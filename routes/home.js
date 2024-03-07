@@ -3,12 +3,12 @@ const { checkAuth, checkNotAuth, checkSetup, checkNotSetup } = require('../handl
 const router = express.Router();
 const router2 = express.Router()
 const router3 = express.Router()
+const router4 = express.Router()
 const Subdomain = require("../models/Subdomain")
 const fs = require('fs');
-const dotenv = require('dotenv');
-const mongoose = require("mongoose")
 const User = require("../models/User")
 const Role = require("../models/Role")
+const bcrypt = require("bcrypt")
 
 router.get("/", checkSetup, checkNotAuth, function (req, res) {
 
@@ -16,9 +16,9 @@ router.get("/", checkSetup, checkNotAuth, function (req, res) {
 })
 
 router2.get("/", checkSetup, checkAuth, async function (req, res) {
-    const subdomains = await Subdomain.find({owner: req.user.username}).sort({status: 1})
-    const user = await User.findOne({username: req.user.username})
-    const role = await Role.findOne({ name: user.role})
+    const subdomains = await Subdomain.findAll({where:{owner: req.user.username}})
+    const user = await User.findOne({where:{username: req.user.username}})
+    const role = await Role.findOne({where: { name: user.role}})
     res.render(__dirname + "/../views/dash.ejs", {domain: process.env.DOMAIN, subdomains: subdomains, user: req.user, subdomainsLimit: role.maxSubdomains, subdomainsCount: user.subdomainsCount})
 })
 
@@ -32,18 +32,35 @@ router3.post("/", checkNotSetup, async function (req, res) {
     const sessionsecret = req.body.sessionsecret
     const cftoken = req.body.cftoken
     const cfzone = req.body.cfzone
-    fs.writeFileSync(__dirname + '/../.env', `\nMONGO_SRV=${mongosrv}\n`, { flag: 'a' });
-    fs.writeFileSync(__dirname + '/../.env', `DOMAIN=${domain}\n`, { flag: 'a' });
-    fs.writeFileSync(__dirname + '/../.env', `SESSION_SECRET=${sessionsecret}\n`, { flag: 'a' });
-    fs.writeFileSync(__dirname + '/../.env', `CLOUDFLARE_API_TOKEN=${cftoken}\n`, { flag: 'a' });
-    fs.writeFileSync(__dirname + '/../.env', `CLOUDFLARE_ZONE_ID=${cfzone}\n`, { flag: 'a' });
-    fs.writeFileSync(__dirname + '/../.env', `SETUPED=yes\n`, { flag: 'a' });
-    dotenv.config()
-    mongoose.connect(process.env.MONGO_SRV, {}).then(() => {
-        console.log("Connected to the database!")
-    }).catch((err) => {
-        console.log("Failed connect to the database!")
+    fs.writeFileSync(__dirname + '/../data/.env', `\nMONGO_SRV=${mongosrv}\n`, { flag: 'a' });
+    fs.writeFileSync(__dirname + '/../data/.env', `DOMAIN=${domain}\n`, { flag: 'a' });
+    fs.writeFileSync(__dirname + '/../data/.env', `SESSION_SECRET=${sessionsecret}\n`, { flag: 'a' });
+    fs.writeFileSync(__dirname + '/../data/.env', `CLOUDFLARE_API_TOKEN=${cftoken}\n`, { flag: 'a' });
+    fs.writeFileSync(__dirname + '/../data/.env', `CLOUDFLARE_ZONE_ID=${cfzone}\n`, { flag: 'a' });
+    require("dotenv").config({path: __dirname + "/../data/.env"})
+    res.redirect("/setup2")
+    process.exit()
+})
+
+router4.get("/", checkNotSetup, async function (req, res) {
+    res.render(__dirname + "/../views/setup2.ejs", {})
+})
+
+router4.post("/", checkNotSetup, async function (req, res) {
+    const username = req.body.username
+    const password = req.body.password
+    const email = req.body.email
+    const hashedPassword = await bcrypt.hash(password, 10)
+    User.create({
+        username: username,
+        email: email,
+        password: hashedPassword,
+        role: 'default',
+        subdomainsCount: 0,
+        isAdmin: true
     })
+    fs.writeFileSync(__dirname + '/../data/.env', `SETUPED=yes\n`, { flag: 'a' })
+    require("dotenv").config({path: __dirname + "/../data/.env"})
     res.redirect("/")
     process.exit()
 })
@@ -51,3 +68,4 @@ router3.post("/", checkNotSetup, async function (req, res) {
 module.exports.home = router;
 module.exports.dash = router2;
 module.exports.setup = router3
+module.exports.setup2 = router4

@@ -1,28 +1,33 @@
-const mongoose = require("mongoose")
+const {Model, DataTypes} = require("sequelize")
+const database = require("../database")
 
-const subdomainSchema = new mongoose.Schema({
+const Subdomain = database.define("subdomain", {
     subdomain: {
-        type: String,
-        required: true,
+        type: DataTypes.STRING,
+        allowNull: false
     },
     owner: {
-        type: String,
-        required: true,
+        type: DataTypes.STRING,
+        allowNull: false,
     },
     pointedTo: {
-        type: String,
-        required: true,
+        type: DataTypes.STRING,
+        allowNull: false,
     },
     recordType: {
-        type: String,
-        required: true
+        type: DataTypes.STRING,
+        allowNull: false
     },
     status: {
-        type: Number,
-        required: true
+        type: DataTypes.INTEGER,
+        allowNull: false
     }
+}, {
+    modelName: "subdomain",
+    tableName: "subdomains",
+    timestamps: false
 })
 
-const model = mongoose.model("subdomains", subdomainSchema)
+Subdomain.sync()
 
-module.exports = model
+module.exports = Subdomain;

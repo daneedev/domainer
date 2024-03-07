@@ -23,7 +23,7 @@ router2.get("/", checkSetup, checkNotAuth, function (req, res) {
 })
 
 router2.post("/", checkSetup, checkNotAuth, async function (req, res) {
-    const findUser = await User.findOne({username: req.body.username})
+    const findUser = await User.findOne({where: {username: req.body.username}})
     if (findUser) {
         req.flash("error", "That username is already taken!")
         res.redirect("/register")
@@ -32,8 +32,8 @@ router2.post("/", checkSetup, checkNotAuth, async function (req, res) {
         res.redirect("/register")
     } else {
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
-        const role = await Role.findOne({default: true})
-        const newUser = new User({
+        const role = await Role.findOne({where: {default: true}})
+        User.create({
             username: req.body.username,
             email: req.body.email,
             password: hashedPassword,
@@ -41,9 +41,7 @@ router2.post("/", checkSetup, checkNotAuth, async function (req, res) {
             role: role.name,
             subdomainsCount: 0
         })
-        newUser.save().then(() => {
             res.redirect("/login")
-        })
     }
 })
 
