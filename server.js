@@ -4,7 +4,7 @@ const app = express();
 const passport = require('passport');
 const path = require("path")
 const flash = require("connect-flash")
-const session = require("cookie-session")
+const session = require("express-session")
 const initializePassport = require("./handlers/passport")
 const RateLimit = require("express-rate-limit")
 const updateStats = require("./handlers/updateStats")
@@ -28,16 +28,14 @@ sequelize.sync().then(() => console.log("Database is ready!"))
 if (process.env.SETUPED == "yes") {
 initializePassport(passport)
 app.use(session({
-    name: "logincookie",
-    keys: [process.env.SESSION_SECRET],
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: true,
+      secure: true, // TODO: Add option to setup to set https/http
       httpOnly: true,
-      domain: process.env.DOMAIN,
-      maxAge: 86400000
-    }
+      maxAge: 86400000,
+    },
   }))
   app.use(passport.initialize())
   app.use(passport.session())
