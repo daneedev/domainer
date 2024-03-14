@@ -26,13 +26,16 @@ const sequelize = require('./database');
 sequelize.sync().then(() => console.log("Database is ready!"))
 
 if (process.env.SETUPED == "yes") {
+let https;
+if (process.env.HTTPS == "yes") https = true
+else https = false
 initializePassport(passport)
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: true, // TODO: Add option to setup to set https/http
+      secure: https,
       httpOnly: true,
       maxAge: 86400000,
     },
