@@ -7,17 +7,17 @@ function initialize(passport) {
         const findUser = await User.findOne({where: {username: username}})
         if (!findUser) {
             return done(null, false, { message: "Username or password is incorrect"})
-        } 
-        try {
-            if (await bcrypt.compare(password, findUser.password)) {
-                return done(null, findUser)
-            } else {
-                return done (null, false, { message: "Username or password is incorrect"})
+        } else {
+            try {
+                if (await bcrypt.compare(password, findUser.password)) {
+                    return done(null, findUser)
+                } else {
+                    return done (null, false, { message: "Username or password is incorrect"})
+                }
+            } catch (err) {
+                return done(err)
             }
-        } catch (err) {
-            return done(err)
         }
-        return done(null, findUser)
     }
     passport.use(new LocalStrategy({}, authUser))
     passport.serializeUser(function(user, done) {
