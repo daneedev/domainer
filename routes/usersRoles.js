@@ -26,7 +26,7 @@ router.post("/", checkAuth, checkAdmin, async function (req, res) {
 router2.get("/", checkAuth, checkAdmin, async function (req, res) {
     const username = req.query.username
     const roles = await Role.findAll()
-    res.render(__dirname + "/../views/changerole.ejs", {username: username, roles: roles})
+    res.render("edit/changerole.html", {username: username, roles: roles})
 })
 
 router2.post("/", checkAuth, checkAdmin, async function (req, res) {
@@ -69,7 +69,7 @@ router4.get("/", checkAuth, checkAdmin, async function (req, res) {
         req.flash("adminerror", "That role doesn't exist!")
         res.redirect("/admin")
     } else {
-        res.render(__dirname + "/../views/editrole.ejs", {role: role})
+        res.render("edit/editrole.html", {role: role})
     }
 })
 
@@ -94,7 +94,7 @@ router4.post("/", checkAuth, checkAdmin, async function (req, res) {
 })
 
 router5.get("/", checkAuth, checkAdmin, async function (req, res) {
-    res.render(__dirname + "/../views/addrole.ejs", {})
+    res.render("edit/addrole.html", {})
 })
 
 router5.post("/", checkAuth, checkAdmin, async function (req, res) {
@@ -116,12 +116,12 @@ router5.post("/", checkAuth, checkAdmin, async function (req, res) {
 
 router6.get("/", checkAuth, async function (req, res) {
     const user = await User.findOne({where:{username: req.user.username}})
-    res.render(__dirname + "/../views/manage.ejs", {user: user})
+    res.render("edit/manage.html", {user: user})
 })
 
 router6.get("/edit", checkAuth, async function (req, res) {
     const user = await User.findOne({where:{username: req.user.username}})
-    res.render(__dirname + "/../views/edituser.ejs", {user: user, message: req.flash("editerror")})
+    res.render("edit/edituser.html", {user: user, message: req.flash("editerror")})
 })
 
 router6.post("/edit", checkAuth, async function (req, res) {

@@ -12,18 +12,18 @@ const bcrypt = require("bcrypt")
 
 router.get("/", checkSetup, checkNotAuth, function (req, res) {
 
-    res.render(__dirname + "/../views/index.ejs", {domain: process.env.DOMAIN})
+    res.render("index.html", {domain: process.env.DOMAIN})
 })
 
 router2.get("/", checkSetup, checkAuth, async function (req, res) {
     const subdomains = await Subdomain.findAll({where:{owner: req.user.username}})
     const user = await User.findOne({where:{username: req.user.username}})
     const role = await Role.findOne({where: { name: user.role}})
-    res.render(__dirname + "/../views/dash.ejs", {domain: process.env.DOMAIN, subdomains: subdomains, user: req.user, subdomainsLimit: role.maxSubdomains, subdomainsCount: user.subdomainsCount})
+    res.render("dash.html", {domain: process.env.DOMAIN, subdomains: subdomains, user: req.user, subdomainsLimit: role.maxSubdomains, subdomainsCount: user.subdomainsCount})
 })
 
 router3.get("/", checkNotSetup, async function (req, res) {
-    res.render(__dirname + "/../views/setup.ejs", {})
+    res.render("setup/setup.html", {})
 })
 
 router3.post("/", checkNotSetup, async function (req, res) {
@@ -47,7 +47,7 @@ router3.post("/", checkNotSetup, async function (req, res) {
 })
 
 router4.get("/", checkNotSetup, async function (req, res) {
-    res.render(__dirname + "/../views/setup2.ejs", {})
+    res.render("setup/setup2.html", {})
 })
 
 router4.post("/", checkNotSetup, async function (req, res) {

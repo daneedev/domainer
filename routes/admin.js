@@ -20,7 +20,7 @@ router.get("/", checkSetup, checkAuth, checkAdmin, async function (req, res) {
     const users = await User.findAll()
     const roles = await Role.findAll()
     updateStats()
-    res.render(__dirname + "/../views/admin.ejs", {subdomains: subdomains, message: req.flash("adminerror"), stats: stats, latestversion: latestversion, currentversion: currentversion, users: users, roles: roles})
+    res.render("admin.html", {subdomains: subdomains, message: req.flash("adminerror"), stats: stats, latestversion: latestversion, currentversion: currentversion, users: users, roles: roles})
 })
 
 router2.post("/", checkSetup, checkAuth, checkAdmin, async function (req, res) {
