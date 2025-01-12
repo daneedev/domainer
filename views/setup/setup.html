@@ -1,0 +1,24 @@
+{% extends "setup/template.html" %}
+
+{% block head %}
+<title>Domainer | Setup</title>
+{% endblock %}
+
+{% block content %}
+<h1 class="text-gray-100 font-bold text-3xl">Domainer Setup</h1>
+<form action="/setup" method="post" class="flex flex-col text-center justify-center items-center">
+    <label for="domain" class="text-gray-100 font-bold text-lg">Domain</label>
+    <input type="text" id="domain" name="domain" class="rounded-2xl text-lg text-center" required>  
+    <label for="sessionsecret" class="text-gray-100 font-bold text-lg">Session Secret (can be anything)</label>
+    <input type="password" id="sessionsecret" name="sessionsecret" class="rounded-2xl text-lg text-center" required>
+    <label for="cftoken" class="text-gray-100 font-bold text-lg">Cloudflare API Token</label>
+    <input type="password" id="cftoken" name="cftoken" class="rounded-2xl text-lg text-center" required>
+    <label for="cfzone" class="text-gray-100 font-bold text-lg">Cloudflare Zone ID</label>
+    <input type="password" id="cfzone" name="cfzone" class="rounded-2xl text-lg text-center" required>
+    <label for="https" class="text-gray-100 font-bold text-lg">HTTPS</label>
+    <input type="checkbox" id="https" name="https" value="true" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded text-center">
+    <button type="submit" class="rounded-2xl bg-gray-100 w-1/2 h-8 mt-2 duration-200 hover:bg-gray-200">Setup</button>
+</form>
+{% endblock %}
+
+

@@ -1,0 +1,20 @@
+{% extends "setup/template.html" %}
+
+{% block head %}
+<title>Domainer | Create admin user</title>
+{% endblock %}
+
+{% block content %}
+<h1 class="text-gray-100 font-bold text-3xl">Create admin user</h1>
+<form action="/setup2" method="post" class="flex flex-col text-center justify-center items-center">
+    <label for="username" class="text-gray-100 font-bold text-lg">Username</label>
+    <input type="text" id="username" name="username" class="rounded-2xl text-lg text-center" required>  
+    <label for="email" class="text-gray-100 font-bold text-lg">Email</label>
+    <input type="text" id="email" name="email" class="rounded-2xl text-lg text-center" required>
+    <label for="password" class="text-gray-100 font-bold text-lg">Password</label>
+    <input type="password" id="password" name="password" class="rounded-2xl text-lg text-center" required>
+    <button type="submit" class="rounded-2xl bg-gray-100 w-1/2 h-8 mt-2 duration-200 hover:bg-gray-200">Create account</button>
+</form>
+{% endblock %}
+
+
