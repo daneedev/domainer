@@ -8,8 +8,16 @@ const session = require("express-session")
 const initializePassport = require("./handlers/passport")
 const RateLimit = require("express-rate-limit")
 const updateStats = require("./handlers/updateStats")
+const nunjucks = require("nunjucks")
 
-app.set("view-engine", "ejs")
+nunjucks.configure("views", {
+  autoescape: true,
+  express: app,
+  watch: true
+})
+
+
+app.set("view-engine", "nunjucks")
 
 app.use(express.static(path.join(__dirname, "public")))
 
