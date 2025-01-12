@@ -1,0 +1,17 @@
+{% extends "auth/template.html" %}
+
+{% block head %}
+<title>Domainer | Login</title>
+{% endblock %}
+
+{% block content %}
+<h1 class="text-gray-100 font-bold text-3xl">{{ domain }}</h1>
+<h2 class="text-gray-100 font-bold text-2xl">Login</h2>
+<form action="/login" method="post" class="flex flex-col text-center justify-center items-center">
+    <label for="username" class="text-gray-100 font-bold text-lg">Username</label>
+    <input type="text" id="username" name="username" class="rounded-2xl text-lg text-center">
+    <label for="password" class="text-gray-100 font-bold text-lg">Password</label>
+    <input type="password" id="password" name="password" class="rounded-2xl text-lg text-center">
+    <button type="submit" class="rounded-2xl bg-gray-100 w-1/2 h-8 mt-2 duration-200 hover:bg-gray-200">Login</button>
+</form>
+{% endblock %}

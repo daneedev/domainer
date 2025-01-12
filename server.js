@@ -8,8 +8,15 @@ const session = require("express-session")
 const initializePassport = require("./handlers/passport")
 const RateLimit = require("express-rate-limit")
 const updateStats = require("./handlers/updateStats")
+const nunjucks = require("nunjucks")
 
-app.set("view-engine", "ejs")
+nunjucks.configure("views", {
+  autoescape: true,
+  express: app
+})
+
+
+app.set("view-engine", "nunjucks")
 
 app.use(express.static(path.join(__dirname, "public")))
 
@@ -60,7 +67,8 @@ checkDefaultRole()
 app.use(express.urlencoded({ extended: false }))
 app.use(flash())
 
-const cf = require("cloudflare")({
+const cloudflare = require("cloudflare")
+const cf =  new cloudflare({
     token: process.env.CLOUDFLARE_API_TOKEN
 })
 

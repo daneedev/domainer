@@ -11,7 +11,7 @@ const User = require("../models/User")
 const Role = require("../models/Role")
 
 router.get("/", checkSetup, checkAuth, async function (req, res) {
-    res.render(__dirname + "/../views/addsubdomain.ejs", {domain: process.env.DOMAIN, message: req.flash('domainerror')})
+    res.render("edit/addsubdomain.html", {domain: process.env.DOMAIN, message: req.flash('domainerror')})
 })
 
 router.post("/", checkSetup, checkAuth, async function (req, res) {
@@ -70,7 +70,7 @@ router3.get("/", checkSetup, checkAuth, async function (req, res) {
     if (findSubdomain.owner != req.user.username) {
         res.redirect("/dash")
     } else {
-        res.render(__dirname + "/../views/editsubdomain.ejs", {message: req.flash("editerror"), subdomain: subdomain})
+        res.render("edit/editsubdomain.html", {message: req.flash("editerror"), subdomain: subdomain})
     }
 })
 

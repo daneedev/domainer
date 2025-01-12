@@ -9,7 +9,7 @@ const { checkNotAuth, checkSetup, checkAuth } = require("../handlers/checkAuth")
 const Role = require("../models/Role")
 
 router.get("/", checkSetup, checkNotAuth, function (req, res) {
-    res.render(__dirname + "/../views/login.ejs", {domain: process.env.DOMAIN, message: req.flash('error') })
+    res.render("auth/login.html", {domain: process.env.DOMAIN, message: req.flash('error') })
 })
 
 router.post("/", checkSetup, checkNotAuth, passport.authenticate("local", {
@@ -19,7 +19,7 @@ router.post("/", checkSetup, checkNotAuth, passport.authenticate("local", {
 }))
 
 router2.get("/", checkSetup, checkNotAuth, function (req, res) {
-    res.render(__dirname + "/../views/register.ejs", {domain: process.env.DOMAIN, message: req.flash('error')})
+    res.render("auth/register.html", {domain: process.env.DOMAIN, message: req.flash('error')})
 })
 
 router2.post("/", checkSetup, checkNotAuth, async function (req, res) {
