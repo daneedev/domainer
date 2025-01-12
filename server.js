@@ -12,8 +12,7 @@ const nunjucks = require("nunjucks")
 
 nunjucks.configure("views", {
   autoescape: true,
-  express: app,
-  watch: true
+  express: app
 })
 
 
@@ -68,7 +67,8 @@ checkDefaultRole()
 app.use(express.urlencoded({ extended: false }))
 app.use(flash())
 
-const cf = require("cloudflare")({
+const cloudflare = require("cloudflare")
+const cf =  new cloudflare({
     token: process.env.CLOUDFLARE_API_TOKEN
 })
 
