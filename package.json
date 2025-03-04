@@ -30,7 +30,7 @@
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "sanitize-filename": "^1.6.3",
-    "sequelize": "^6.37.5",
+    "sequelize": "^6.37.6",
     "sqlite3": "^5.1.7"
   }
 }
