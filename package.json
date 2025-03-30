@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/domainerapp/domainer#readme",
   "dependencies": {
-    "axios": "^1.8.1",
+    "axios": "^1.8.4",
     "bcrypt": "^5.1.1",
     "cloudflare": "^4.2.0",
     "connect-flash": "^0.1.1",
