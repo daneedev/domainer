@@ -10,9 +10,6 @@ import Role from "../models/Role";
 import fs from "fs";
 
 const router = express.Router();
-const router2 = express.Router();
-const router3 = express.Router();
-const router4 = express.Router();
 
 router.get("/", checkSetup, checkAuth, checkAdmin, async function (req, res) {
     const subdomains = await Subdomain.findAll()
@@ -26,7 +23,7 @@ router.get("/", checkSetup, checkAuth, checkAdmin, async function (req, res) {
     res.render("admin.html", {subdomains: subdomains, message: req.flash("adminerror"), stats: stats, latestversion: latestversion, currentversion: currentversion, users: users, roles: roles})
 })
 
-router2.post("/", checkSetup, checkAuth, checkAdmin, async function (req, res) {
+router.post("/approve", checkSetup, checkAuth, checkAdmin, async function (req, res) {
     const findSubdomain = await Subdomain.findOne({ where: {subdomain: req.body.subdomain}})
     if (findSubdomain) {
         if (findSubdomain.status == 2) {
@@ -57,7 +54,7 @@ router2.post("/", checkSetup, checkAuth, checkAdmin, async function (req, res) {
     }
 })
 
-router3.post("/", checkSetup, checkAuth, checkAdmin, async function (req, res) {
+router.post("/decline", checkSetup, checkAuth, checkAdmin, async function (req, res) {
     const findSubdomain = await Subdomain.findOne({where: {subdomain: req.body.subdomain}})
     if (findSubdomain) {
         if (findSubdomain.status == 0) {
@@ -85,7 +82,7 @@ router3.post("/", checkSetup, checkAuth, checkAdmin, async function (req, res) {
     }
 })
 
-router4.post("/", checkSetup, checkAuth, checkAdmin, async function (req, res) {
+router.post("/review", checkSetup, checkAuth, checkAdmin, async function (req, res) {
     const findSubdomain = await Subdomain.findOne({ where: {subdomain: req.body.subdomain}})
     if (findSubdomain) {
         if (findSubdomain.status == 1) {
@@ -113,7 +110,4 @@ router4.post("/", checkSetup, checkAuth, checkAdmin, async function (req, res) {
     }
 })
 
-export const admin = router;
-export const approve = router2;
-export const decline = router3;
-export const review = router4;
+export default router;

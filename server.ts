@@ -75,38 +75,22 @@ const cf = new Cloudflare({
 
 export { cf };
 
-import { setup, setup2, home, dash } from "./routes/home";
-import { login, register, logout } from "./routes/auth";
-import { add, deleteSubdomain, edit } from "./routes/subdomains";
-import { admin, approve, decline, review } from "./routes/admin";
-import { deleteUser, changeRole, deleteRole, editRole, addRole, manage } from "./routes/usersRoles";
+import { setup, home, dash } from "./routes/home";
+import subdomainRoutes from "./routes/subdomains";
+import adminRoutes from "./routes/admin";
+import usersRoutes from "./routes/users";
+import rolesRoutes from "./routes/roles";
+import authRoutes from "./routes/auth";
 
 app.use("/setup", setup)
 
 app.use("/setup", setup)
-app.use("/setup2", setup2)
 app.use("/", home)
 app.use("/dash", dash)
-
-app.use("/login", login)
-app.use("/register", register)
-app.use("/logout", logout)
-
-app.use("/add", add)
-app.use("/delete", deleteSubdomain)
-app.use("/edit", edit)
-
-app.use("/admin", admin)
-app.use("/approve", approve)
-app.use("/decline", decline)
-app.use("/toreview", review)
-
-app.use("/deleteuser", deleteUser)
-app.use("/changerole", changeRole)
-app.use("/deleterole", deleteRole)
-app.use("/editrole", editRole)
-app.use("/addrole", addRole)
-
-app.use("/manage", manage)
+app.use("/auth", authRoutes)
+app.use("/subdomains", subdomainRoutes)
+app.use("/admin", adminRoutes)
+app.use("/users", usersRoutes)
+app.use("/roles", rolesRoutes)
 
 app.listen(3000, () => console.log('Server running on port 3000'));

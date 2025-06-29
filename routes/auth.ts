@@ -6,24 +6,22 @@ import { checkNotAuth, checkSetup, checkAuth } from "../handlers/checkAuth";
 import Role from "../models/Role";
 
 const router = express.Router();
-const router2 = express.Router();
-const router3 = express.Router();
 
-router.get("/", checkSetup, checkNotAuth, function (req, res) {
+router.get("/login", checkSetup, checkNotAuth, function (req, res) {
     res.render("auth/login.html", {domain: process.env.DOMAIN, message: req.flash('error') })
 })
 
-router.post("/", checkSetup, checkNotAuth, passport.authenticate("local", {
+router.post("/login", checkSetup, checkNotAuth, passport.authenticate("local", {
     successRedirect: "/dash",
     failureRedirect: '/login',
     failureFlash: true
 }))
 
-router2.get("/", checkSetup, checkNotAuth, function (req, res) {
+router.get("/register", checkSetup, checkNotAuth, function (req, res) {
     res.render("auth/register.html", {domain: process.env.DOMAIN, message: req.flash('error')})
 })
 
-router2.post("/", checkSetup, checkNotAuth, async function (req, res) {
+router.post("/register", checkSetup, checkNotAuth, async function (req, res) {
     const findUser = await User.findOne({where: {username: req.body.username}})
     if (findUser) {
         req.flash("error", "That username is already taken!")
@@ -51,7 +49,7 @@ router2.post("/", checkSetup, checkNotAuth, async function (req, res) {
     }
 })
 
-router3.post("/", checkSetup, checkAuth, function (req, res) {
+router.post("/logout", checkSetup, checkAuth, function (req, res) {
     req.logOut(function(err) {
         if (err) {
             console.error("Logout error:", err);
@@ -62,6 +60,4 @@ router3.post("/", checkSetup, checkAuth, function (req, res) {
     res.redirect("/")
 })
 
-export const login = router;
-export const register = router2;
-export const logout = router3;
+export default router;

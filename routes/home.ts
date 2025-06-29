@@ -10,10 +10,8 @@ import dotenv from "dotenv";
 const router = express.Router();
 const router2 = express.Router();
 const router3 = express.Router();
-const router4 = express.Router();
 
 router.get("/", checkSetup, checkNotAuth, function (req, res) {
-
     res.render("index.html", {domain: process.env.DOMAIN})
 })
 
@@ -54,11 +52,11 @@ router3.post("/", checkNotSetup, async function (req, res) {
     process.exit()
 })
 
-router4.get("/", checkNotSetup, async function (req, res) {
+router3.get("/2", checkNotSetup, async function (req, res) {
     res.render("setup/setup2.html", {})
 })
 
-router4.post("/", checkNotSetup, async function (req, res) {
+router3.post("/2", checkNotSetup, async function (req, res) {
     const username = req.body.username
     const password = req.body.password
     const email = req.body.email
@@ -80,4 +78,3 @@ router4.post("/", checkNotSetup, async function (req, res) {
 export const home = router;
 export const dash = router2;
 export const setup = router3;
-export const setup2 = router4;

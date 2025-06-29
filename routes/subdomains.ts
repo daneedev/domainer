@@ -11,11 +11,11 @@ const router = express.Router();
 const router2 = express.Router();
 const router3 = express.Router();
 
-router.get("/", checkSetup, checkAuth, async function (req, res) {
+router.get("/add", checkSetup, checkAuth, async function (req, res) {
     res.render("edit/addsubdomain.html", {domain: process.env.DOMAIN, message: req.flash('domainerror')})
 })
 
-router.post("/", checkSetup, checkAuth, async function (req, res) {
+router.post("/add", checkSetup, checkAuth, async function (req, res) {
     const findSubdomain = await Subdomain.findOne({where:{subdomain: req.body.subdomain}})
     if (findSubdomain) {
         req.flash("domainerror", "That subdomain already exists!")
@@ -54,7 +54,7 @@ router.post("/", checkSetup, checkAuth, async function (req, res) {
     }
 })
 
-router2.post("/", checkSetup, checkAuth, async function (req, res) {
+router.post("/delete", checkSetup, checkAuth, async function (req, res) {
     const subdomain = req.body.subdomain
     const findSubdomain = await Subdomain.findOne({where:{subdomain: subdomain}})
     if (!findSubdomain) {
@@ -91,7 +91,7 @@ router2.post("/", checkSetup, checkAuth, async function (req, res) {
     }
 })
 
-router3.get("/", checkSetup, checkAuth, async function (req, res) {
+router.get("/edit", checkSetup, checkAuth, async function (req, res) {
     if (!req.query.subdomain) {
         req.flash("editerror", "No subdomain specified!")
         res.redirect("/dash")
@@ -115,7 +115,7 @@ const editLimiter = RateLimit({
     max: 500
 })
 
-router3.post("/", checkSetup, checkAuth, editLimiter, async function (req, res) {
+router.post("/edit", checkSetup, checkAuth, editLimiter, async function (req, res) {
     const subdomain = req.body.subdomain
     const findSubdomain = await Subdomain.findOne({where:{subdomain: subdomain}})
     if (!findSubdomain) {
@@ -158,6 +158,4 @@ router3.post("/", checkSetup, checkAuth, editLimiter, async function (req, res) 
     }
 })
 
-export const add = router;
-export const deleteSubdomain = router2;
-export const edit = router3;
+export default router;
