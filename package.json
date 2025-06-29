@@ -5,13 +5,15 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "build": "tsc",
+    "serve": "node dist/server.js",
+    "dev": "ts-node-dev server.ts"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/domainerapp/domainer.git"
   },
-  "author": "DaneeSkripter",
+  "author": "Danee",
   "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/domainerapp/domainer/issues"
@@ -31,7 +33,8 @@
     "passport-local": "^1.0.0",
     "sanitize-filename": "^1.6.3",
     "sequelize": "^6.37.7",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "ts-node-dev": "^2.0.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
