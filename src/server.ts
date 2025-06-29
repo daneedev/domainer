@@ -12,15 +12,16 @@ import updateStats from "./handlers/updateStats";
 import nunjucks from "nunjucks";
 import Role from "./models/Role";
 
-nunjucks.configure("views", {
+nunjucks.configure("src/views", {
   autoescape: true,
-  express: app
+  express: app,
+  watch: true,
 })
 
 
-app.set("view-engine", "nunjucks")
+app.set("view engine", "nunjucks")
 
-app.use(express.static(path.join(__dirname, "public")))
+app.use(express.static(path.join(__dirname, "public")));
 
 
 const limiter = RateLimit({

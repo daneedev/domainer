@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "serve": "node dist/server.js",
-    "dev": "ts-node-dev server.ts"
+    "dev": "ts-node-dev src/server.ts",
+    "cssbuild": "npx @tailwindcss/cli -i ./src/public/css/tailwind.css -o ./src/public/css/style.css --minify",
+    "cssdev": "npx tailwindcss -i ./src/public/css/tailwind.css -o ./src/public/css/style.css --watch"
   },
   "repository": {
     "type": "git",

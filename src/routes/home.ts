@@ -34,22 +34,19 @@ router3.get("/", checkNotSetup, async function (req, res) {
 
 router3.post("/", checkNotSetup, async function (req, res) {
     const domain = req.body.domain
-    const mongosrv = req.body.mongodb
     const sessionsecret = req.body.sessionsecret
     const cftoken = req.body.cftoken
     const cfzone = req.body.cfzone
     let https;
     if (req.body.https == true) https = "yes"
     else https = "no"
-    fs.writeFileSync(__dirname + '/../data/.env', `\nMONGO_SRV=${mongosrv}\n`, { flag: 'a' });
     fs.writeFileSync(__dirname + '/../data/.env', `DOMAIN=${domain}\n`, { flag: 'a' });
     fs.writeFileSync(__dirname + '/../data/.env', `SESSION_SECRET=${sessionsecret}\n`, { flag: 'a' });
     fs.writeFileSync(__dirname + '/../data/.env', `CLOUDFLARE_API_TOKEN=${cftoken}\n`, { flag: 'a' });
     fs.writeFileSync(__dirname + '/../data/.env', `CLOUDFLARE_ZONE_ID=${cfzone}\n`, { flag: 'a' });
     fs.writeFileSync(__dirname + '/../data/.env', `HTTPS=${https}\n`, { flag: 'a' });
     require("dotenv").config({path: __dirname + "/../data/.env"})
-    res.redirect("/setup2")
-    process.exit()
+    res.redirect("/setup/2")
 })
 
 router3.get("/2", checkNotSetup, async function (req, res) {
@@ -72,7 +69,6 @@ router3.post("/2", checkNotSetup, async function (req, res) {
     fs.writeFileSync(__dirname + '/../data/.env', `SETUPED=yes\n`, { flag: 'a' })
     dotenv.config({path: __dirname + "/../data/.env"})
     res.redirect("/")
-    process.exit()
 })
 
 export const home = router;

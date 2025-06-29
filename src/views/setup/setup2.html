@@ -1,0 +1,20 @@
+{% extends "template.html" %}
+
+{% block head %}
+{% endblock %}
+
+
+{% block content %}
+<article class="setup">
+    <h1>Domainer Setup: Create Admin User (2/2)</h1>
+    <form action="/setup/2" method="post" class="setup-form">
+        <label for="username" >Username</label>
+        <input type="text" id="username" name="username" class="textfield"  required>  
+        <label for="email" >Email</label>
+        <input type="email" id="email" name="email" class="textfield" required>
+        <label for="password" >Password</label>
+        <input type="password" id="password" name="password" class="textfield" required>
+        <button type="submit" class="btn-primary">Finish setup</button>
+    </form>
+</article>
+{% endblock %}
