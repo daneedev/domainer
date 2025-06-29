@@ -1,16 +1,17 @@
-const express = require("express")
-const router = express.Router()
-const { checkAuth, checkAdmin } = require("../handlers/checkAuth")
-const User = require("../models/User")
-const router2 = express.Router()
-const Role = require("../models/Role")
-const router3 = express.Router()
-const router4 = express.Router()
-const router5 = express.Router()
-const router6 = express.Router()
-const bcrypt = require("bcrypt")
-const Subdomain = require("../models/Subdomain")
-const sanitize = require("sanitize-filename")
+import express from "express";
+import { checkAuth, checkAdmin } from "../handlers/checkAuth";
+import User from "../models/User";
+import Role from "../models/Role";
+import bcrypt from "bcrypt";
+import Subdomain from "../models/Subdomain";
+import sanitize from "sanitize-filename";
+
+const router = express.Router();
+const router2 = express.Router();
+const router3 = express.Router();
+const router4 = express.Router();
+const router5 = express.Router();
+const router6 = express.Router();
 
 router.post("/", checkAuth, checkAdmin, async function (req, res) {
     const findUser = await User.findOne({where:{username: req.body.username}})
@@ -63,7 +64,7 @@ router3.post("/", checkAuth, checkAdmin, async function (req, res) {
 })
 
 router4.get("/", checkAuth, checkAdmin, async function (req, res) {
-    const role = sanitize(req.query.role)
+    const role = sanitize(req.query.role as string)
     const findRole = await Role.findOne({where:{name: role}})
     if (!findRole) {
         req.flash("adminerror", "That role doesn't exist!")
@@ -115,19 +116,19 @@ router5.post("/", checkAuth, checkAdmin, async function (req, res) {
 })
 
 router6.get("/", checkAuth, async function (req, res) {
-    const user = await User.findOne({where:{username: req.user.username}})
+    const user = await User.findOne({where:{username: (req.user as User).username}})
     res.render("edit/manage.html", {user: user})
 })
 
 router6.get("/edit", checkAuth, async function (req, res) {
-    const user = await User.findOne({where:{username: req.user.username}})
+    const user = await User.findOne({where:{username: (req.user as User).username}})
     res.render("edit/edituser.html", {user: user, message: req.flash("editerror")})
 })
 
 router6.post("/edit", checkAuth, async function (req, res) {
     const findUser = await User.findOne({where:{username: req.body.username}})
-    if (findUser) {
-        req.flash("editerror", "That username is already taken!")
+    if (!findUser) {
+        req.flash("editerror", "That user doesn't exist!")
         res.redirect("/manage/edit")
     } else {
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
@@ -135,17 +136,23 @@ router6.post("/edit", checkAuth, async function (req, res) {
         findUser.email = req.body.email
         findUser.password = hashedPassword
         findUser.save()
-        await (await Subdomain.findAll({where:{owner: req.user.username}})).forEach((subdomain) => {
+        await (await Subdomain.findAll({where:{owner: (req.user as User).username}})).forEach((subdomain) => {
             subdomain.owner = req.body.username
             subdomain.save()
         })
-        req.logOut()
+        req.logOut(function(err) {
+            if (err) {
+                console.error("Logout error:", err);
+                req.flash("error", "An error occurred while logging out. Please try again.");
+                return res.redirect("/dash");
+            }
+        });
         res.redirect("/login")
     }
 })
-module.exports.deleteUser = router
-module.exports.changeRole = router2
-module.exports.deleteRole = router3
-module.exports.editRole = router4
-module.exports.addRole = router5
-module.exports.manage = router6
+export const deleteUser = router;
+export const changeRole = router2;
+export const deleteRole = router3;
+export const editRole = router4;
+export const addRole = router5;
+export const manage = router6;

@@ -32,5 +32,14 @@
     "sanitize-filename": "^1.6.3",
     "sequelize": "^6.37.7",
     "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/connect-flash": "^0.0.40",
+    "@types/express-session": "^1.18.2",
+    "@types/nunjucks": "^3.2.6",
+    "@types/passport": "^1.0.17",
+    "@types/passport-local": "^1.0.38",
+    "typescript": "^5.8.3"
   }
 }

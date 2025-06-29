@@ -1,12 +1,13 @@
-const express = require("express")
-const router = express.Router()
-const router2 = express.Router()
-const router3 = express.Router()
-const User = require("../models/User")
-const bcrypt = require("bcrypt")
-const passport = require("passport")
-const { checkNotAuth, checkSetup, checkAuth } = require("../handlers/checkAuth")
-const Role = require("../models/Role")
+import express from "express";
+import User from "../models/User";
+import bcrypt from "bcrypt";
+import passport from "passport";
+import { checkNotAuth, checkSetup, checkAuth } from "../handlers/checkAuth";
+import Role from "../models/Role";
+
+const router = express.Router();
+const router2 = express.Router();
+const router3 = express.Router();
 
 router.get("/", checkSetup, checkNotAuth, function (req, res) {
     res.render("auth/login.html", {domain: process.env.DOMAIN, message: req.flash('error') })
@@ -33,6 +34,11 @@ router2.post("/", checkSetup, checkNotAuth, async function (req, res) {
     } else {
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
         const role = await Role.findOne({where: {default: true}})
+        if (!role) {
+            req.flash("error", "No default role found! Please contact the administrator.")
+            res.redirect("/register")
+            return;
+        }
         User.create({
             username: req.body.username,
             email: req.body.email,
@@ -46,10 +52,16 @@ router2.post("/", checkSetup, checkNotAuth, async function (req, res) {
 })
 
 router3.post("/", checkSetup, checkAuth, function (req, res) {
-    req.logOut()
+    req.logOut(function(err) {
+        if (err) {
+            console.error("Logout error:", err);
+            req.flash("error", "An error occurred while logging out. Please try again.");
+            return res.redirect("/dash");
+        }
+    })
     res.redirect("/")
 })
 
-module.exports.login = router
-module.exports.register = router2
-module.exports.logout = router3
+export const login = router;
+export const register = router2;
+export const logout = router3;

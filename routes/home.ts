@@ -1,14 +1,16 @@
-const express = require('express');
-const { checkAuth, checkNotAuth, checkSetup, checkNotSetup } = require('../handlers/checkAuth');
+import express from 'express';
+import { checkAuth, checkNotAuth, checkSetup, checkNotSetup } from '../handlers/checkAuth';
+import Subdomain from "../models/Subdomain";
+import fs from 'fs';
+import User from "../models/User";
+import Role from "../models/Role";
+import bcrypt from "bcrypt";
+import dotenv from "dotenv";
+
 const router = express.Router();
-const router2 = express.Router()
-const router3 = express.Router()
-const router4 = express.Router()
-const Subdomain = require("../models/Subdomain")
-const fs = require('fs');
-const User = require("../models/User")
-const Role = require("../models/Role")
-const bcrypt = require("bcrypt")
+const router2 = express.Router();
+const router3 = express.Router();
+const router4 = express.Router();
 
 router.get("/", checkSetup, checkNotAuth, function (req, res) {
 
@@ -16,10 +18,16 @@ router.get("/", checkSetup, checkNotAuth, function (req, res) {
 })
 
 router2.get("/", checkSetup, checkAuth, async function (req, res) {
-    const subdomains = await Subdomain.findAll({where:{owner: req.user.username}})
-    const user = await User.findOne({where:{username: req.user.username}})
+    const user = req.user as User;
+    const subdomains = await Subdomain.findAll({where:{owner: user.username}})
+    const userDb = await User.findOne({where:{username: user.username}})
     const role = await Role.findOne({where: { name: user.role}})
-    res.render("dash.html", {domain: process.env.DOMAIN, subdomains: subdomains, user: req.user, subdomainsLimit: role.maxSubdomains, subdomainsCount: user.subdomainsCount})
+    if (!role) {
+        req.flash("error", "No role found! Please contact the administrator.")
+        res.redirect("/login")
+        return;
+    }
+    res.render("dash.html", {domain: process.env.DOMAIN, subdomains: subdomains, user: userDb, subdomainsLimit: role.maxSubdomains, subdomainsCount: user.subdomainsCount})
 })
 
 router3.get("/", checkNotSetup, async function (req, res) {
@@ -64,12 +72,12 @@ router4.post("/", checkNotSetup, async function (req, res) {
         isAdmin: true
     })
     fs.writeFileSync(__dirname + '/../data/.env', `SETUPED=yes\n`, { flag: 'a' })
-    require("dotenv").config({path: __dirname + "/../data/.env"})
+    dotenv.config({path: __dirname + "/../data/.env"})
     res.redirect("/")
     process.exit()
 })
 
-module.exports.home = router;
-module.exports.dash = router2;
-module.exports.setup = router3
-module.exports.setup2 = router4
+export const home = router;
+export const dash = router2;
+export const setup = router3;
+export const setup2 = router4;

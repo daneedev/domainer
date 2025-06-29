@@ -1,8 +1,9 @@
+import Stats from "../models/Stats";
+import Subdomain from "../models/Subdomain";
+import User from "../models/User";
+import Role from "../models/Role";
+
 async function updateStats() {
-    const Stats = require("../models/stats")
-    const Subdomain = require("../models/Subdomain")
-    const User = require("../models/User")
-    const Role = require("../models/Role")
     const findStats = await Stats.findOne()
     const allsubdomains = (await Subdomain.findAndCountAll()).count
     const approvedsubdomains = (await Subdomain.findAndCountAll({where: {status: 2}})).count
@@ -30,4 +31,4 @@ async function updateStats() {
     }
   }
 
-module.exports = updateStats;
+export default updateStats;
