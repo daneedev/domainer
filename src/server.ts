@@ -11,6 +11,7 @@ import RateLimit from "express-rate-limit";
 import updateStats from "./handlers/updateStats";
 import nunjucks from "nunjucks";
 import Role from "./models/Role";
+import crypto from "crypto";
 
 nunjucks.configure("src/views", {
   autoescape: true,
@@ -41,7 +42,7 @@ if (process.env.HTTPS == "yes") https = true
 else https = false
 initializePassport()
 app.use(session({
-    secret: process.env.SESSION_SECRET || Math.random().toString(36).substring(2, 15),
+    secret: process.env.SESSION_SECRET || crypto.randomBytes(64).toString('hex'),
     resave: false,
     saveUninitialized: false,
     cookie: {
