@@ -55,11 +55,6 @@ User.init({
     sequelize: db,
 });
 
-User.beforeCreate(async (user) => {
-    const hashedPassword = await bcrypt.hash(user.password, 10);
-    user.password = hashedPassword;
-})
-
 User.sync()
 
 export default User;
