@@ -1,0 +1,78 @@
+{% extends "template.html" %}
+
+{% block head %}
+<title>{{ domain }} | Home</title>
+<script src="/js/type.js"></script>
+<link rel="stylesheet" href="/css/main.css">
+{% endblock %}
+
+
+{% block herotext %}Register your subdomain at <span class="gradient-text"><span id="typewriter"></span>.{{ domain }}</span> for free!{% endblock %}
+
+{% block content %}
+<!-- Features Section -->
+<section class="features-section">
+    <div class="feature-card">
+        <div class="feature-icon">
+            <i class="fas fa-gift"></i>
+        </div>
+        <p class="feature-title">Completely Free</p>
+        <p class="feature-description">No hidden fees, no credit card required. Get your subdomain at no cost.</p>
+    </div>
+    <div class="feature-card">
+        <div class="feature-icon">
+            <i class="fa-solid fa-truck-fast"></i>
+        </div>
+        <p class="feature-title">Fast & Reliable</p>
+        <p class="feature-description">Powered by Cloudflare's global network for excellent performance worldwide.</p>
+    </div>
+    <div class="feature-card">
+        <div class="feature-icon">
+            <i class="fas fa-shield-alt"></i>
+        </div>
+        <p class="feature-title">Secure</p>
+        <p class="feature-description">SSL-ready with enterprise-grade security and DDoS protection included.</p>
+    </div>
+    <div class="feature-card">
+        <div class="feature-icon">
+            <i class="fas fa-tools"></i>
+        </div>
+        <p class="feature-title">Easy Setup</p>
+        <p class="feature-description">Simple configuration process to get your subdomain up and running quickly.</p>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="how-it-works">
+    <h2 class="section-title">How It Works</h2>
+    <div class="steps-container">
+        <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+                <p class="feature-title">Sign Up</p>
+                <p class="feature-description">Create your free account to get started</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+                <p class="feature-title">Send subdomain request</p>
+                <p class="feature-description">Select your desired subdomain name and submit your request</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+                <p class="feature-title">Wait for Approval</p>
+                <p class="feature-description">Our team will review your request and notify you once it's approved</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="domainer">
+    <p class="section-title">Offer your domain to others</p>
+    <p class="feature-description">Do you own a cool domain? Let others benefit from it too! With Domainer, you can offer subdomains to your friends, community, or users, just like this website does. Help others build their online presence while making the most out of your domain.</p>
+    <a href="https://github.com/daneedev/domainer" class="btn-primary">Use Domainer</a>
+</section>
+{% endblock %}

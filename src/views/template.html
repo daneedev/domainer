@@ -14,7 +14,7 @@
 </head>
 <body>
     <nav>
-        <h1>Domainer</h1>
+        <h1>{{ domain }}</h1>
         <ul>
             <li><a href="/auth/login">Login</a></li>
             <li><a href="/auth/register">Register</a></li>
@@ -23,7 +23,13 @@
     <article class="hero">
         <p class="hero-text">{% block herotext %}{% endblock %}</p>
     </article>
+    <main>
     {% block content %}
     {% endblock %}
+    </main>
+    <footer>
+        <p>&copy; 2025 {{ domain }}. All rights reserved.</p>
+        <p>Powered by <a href="https://github.com/daneedev/domainer">Domainer</a> | Made with <i class="fas fa-heart"></i> by <a href="https://github.com/daneedev">Danee</a></p>
+    </footer>
 </body>
 </html>
