@@ -41,7 +41,7 @@ main {
   max-width: 2000px;
 }
 
-body > nav h1 {
+body > nav > a {
   color: var(--text-color);
   font-size: 24px;
   font-weight: 600;
@@ -112,23 +112,27 @@ body > nav ul li a:hover, .btn-primary:hover {
     51%, 100% { border-right-color: transparent; }
 }
 
-.setup {
+.form-box {
   width: 80%;
   max-width: 800px;
   margin: 20px auto;
   padding: 20px;
   background-color: var(--dark-gray);
   border-radius: 8px;
-
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: start;
 }
-.setup h1 {
+.form-box h1 {
   color: var(--text-color);
   font-size: 24px;
   font-weight: 600;
   margin-bottom: 20px;
 }
 
-.setup form {
+.form-box form {
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -200,7 +204,14 @@ footer {
 footer p {
   margin: 5px 0;
 }
-footer a {
+a {
   color: var(--primary-color);
   text-decoration: none;
+}
+
+@media (max-width: 1050px) {
+    .hero-text {
+        font-size: 48px;
+    }
+    
 }

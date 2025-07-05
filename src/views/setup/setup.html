@@ -1,13 +1,14 @@
 {% extends "base.html" %}
 
 {% block head %}
+<title>{{ domain }} | Setup</title>
 {% endblock %}
 
 
 {% block content %}
-<article class="setup">
+<article class="form-box">
     <h1>Domainer Setup: Configuration (1/2)</h1>
-    <form action="/setup" method="post" class="setup-form">
+    <form action="/setup" method="post">
         <label for="domain" >Domain</label>
         <input type="text" id="domain" name="domain" class="textfield"  required>  
         <label for="sessionsecret" >Session Secret (can be anything)</label>

@@ -1,13 +1,14 @@
 {% extends "base.html" %}
 
 {% block head %}
+<title>{{ domain }} | Setup</title>
 {% endblock %}
 
 
 {% block content %}
-<article class="setup">
+<article class="form-box">
     <h1>Domainer Setup: Create Admin User (2/2)</h1>
-    <form action="/setup/2" method="post" class="setup-form">
+    <form action="/setup/2" method="post">
         <label for="username" >Username</label>
         <input type="text" id="username" name="username" class="textfield"  required>  
         <label for="email" >Email</label>
