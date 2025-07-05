@@ -8,27 +8,27 @@ import Role from "../models/Role";
 const router = express.Router();
 
 router.get("/login", checkSetup, checkNotAuth, function (req, res) {
-    res.render("auth/login.html", {domain: process.env.DOMAIN, message: req.flash('error') })
+    res.render("auth/login.html", {domain: process.env.DOMAIN, error: req.flash('error'), success: req.flash('success')})
 })
 
 router.post("/login", checkSetup, checkNotAuth, passport.authenticate("local", {
     successRedirect: "/dash",
-    failureRedirect: '/login',
+    failureRedirect: '/auth/login',
     failureFlash: true
 }))
 
 router.get("/register", checkSetup, checkNotAuth, function (req, res) {
-    res.render("auth/register.html", {domain: process.env.DOMAIN, message: req.flash('error')})
+    res.render("auth/register.html", {domain: process.env.DOMAIN, error: req.flash('error')})
 })
 
 router.post("/register", checkSetup, checkNotAuth, async function (req, res) {
     const findUser = await User.findOne({where: {username: req.body.username}})
     if (findUser) {
         req.flash("error", "That username is already taken!")
-        res.redirect("/register")
+        res.redirect("/auth/register")
     } else if (req.body.password.length < 8) { 
         req.flash("error", "Password must be at least 8 characters!")
-        res.redirect("/register")
+        res.redirect("/auth/register")
     } else {
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
         const role = await Role.findOne({where: {default: true}})
@@ -45,7 +45,8 @@ router.post("/register", checkSetup, checkNotAuth, async function (req, res) {
             role: role.name,
             subdomainsCount: 0
         })
-            res.redirect("/login")
+        req.flash("success", "Registration successful! You can now log in.")
+            res.redirect("/auth/login")
     }
 })
 

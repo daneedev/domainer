@@ -1,13 +1,19 @@
 {% extends "base.html"%}
 
 {% block head %}
-<title>{{ domain }} | Login</title>
-<link rel="stylesheet" href="/css/auth.css">
+<title>{{ domain }} | Register</title>
 {% endblock %}
 
 {% block content %}
 <article class="form-box">
-    <h1>Register</h1>
+    <section class="form-header">
+        <h1>Register</h1>
+        {% if error.length > 0 %}
+        <div class="alert alert-error">
+            <p>{{ error }}</p>
+        </div>
+        {% endif %}
+    </section>
     <form action="/auth/register" method="post">
         <label for="username">Username</label>
         <input type="text" id="username" name="username" class="textfield" required>

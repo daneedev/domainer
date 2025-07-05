@@ -2,12 +2,23 @@
 
 {% block head %}
 <title>{{ domain }} | Login</title>
-<link rel="stylesheet" href="/css/auth.css">
 {% endblock %}
 
 {% block content %}
 <article class="form-box">
-    <h1>Login</h1>
+    <section class="form-header">
+        <h1>Login</h1>
+        {% if error.length > 0 %}
+        <div class="alert alert-error">
+            <p>{{ error }}</p>
+        </div>
+        {% endif %}
+        {% if success.length > 0 %}
+        <div class="alert alert-success">
+            <p>{{ success }}</p>
+        </div>
+        {% endif %}
+    </section>
     <form action="/auth/login" method="post">
         <label for="username">Username</label>
         <input type="text" id="username" name="username" class="textfield" required>

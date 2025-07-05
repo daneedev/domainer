@@ -40,12 +40,12 @@ router3.post("/", checkNotSetup, async function (req, res) {
     let https;
     if (req.body.https == true) https = "yes"
     else https = "no"
-    fs.writeFileSync(__dirname + '/../data/.env', `DOMAIN=${domain}\n`, { flag: 'a' });
-    fs.writeFileSync(__dirname + '/../data/.env', `SESSION_SECRET=${sessionsecret}\n`, { flag: 'a' });
-    fs.writeFileSync(__dirname + '/../data/.env', `CLOUDFLARE_API_TOKEN=${cftoken}\n`, { flag: 'a' });
-    fs.writeFileSync(__dirname + '/../data/.env', `CLOUDFLARE_ZONE_ID=${cfzone}\n`, { flag: 'a' });
-    fs.writeFileSync(__dirname + '/../data/.env', `HTTPS=${https}\n`, { flag: 'a' });
-    require("dotenv").config({path: __dirname + "/../data/.env"})
+    fs.writeFileSync('/data/.env', `DOMAIN=${domain}\n`, { flag: 'a' });
+    fs.writeFileSync('/data/.env', `SESSION_SECRET=${sessionsecret}\n`, { flag: 'a' });
+    fs.writeFileSync('/data/.env', `CLOUDFLARE_API_TOKEN=${cftoken}\n`, { flag: 'a' });
+    fs.writeFileSync('/data/.env', `CLOUDFLARE_ZONE_ID=${cfzone}\n`, { flag: 'a' });
+    fs.writeFileSync('/data/.env', `HTTPS=${https}\n`, { flag: 'a' });
+    require("dotenv").config({path: '/data/.env'})
     res.redirect("/setup/2")
 })
 
@@ -66,8 +66,8 @@ router3.post("/2", checkNotSetup, async function (req, res) {
         subdomainsCount: 0,
         isAdmin: true
     })
-    fs.writeFileSync(__dirname + '/../data/.env', `SETUPED=yes\n`, { flag: 'a' })
-    dotenv.config({path: __dirname + "/../data/.env"})
+    fs.writeFileSync('/data/.env', `SETUPED=yes\n`, { flag: 'a' })
+    dotenv.config({path: '/data/.env'})
     res.redirect("/")
 })
 
