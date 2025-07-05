@@ -1,0 +1,22 @@
+{% extends "base.html"%}
+
+{% block head %}
+<title>{{ domain }} | Login</title>
+<link rel="stylesheet" href="/css/auth.css">
+{% endblock %}
+
+{% block content %}
+<article class="form-box">
+    <h1>Login</h1>
+    <form action="/auth/login" method="post">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" class="textfield" required>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" class="textfield" required>
+
+        <button type="submit" class="btn-primary">Login</button>
+    </form>
+    <p class="form-text">Don't have an account? <a href="/auth/register">Register here</a></p>
+</article>
+{% endblock %}
