@@ -34,39 +34,34 @@ app.use(limiter);
 // SYNC DB
 import sequelize from './database';
 
-sequelize.sync().then(() => console.log("Database is ready!"))
+sequelize.sync().then(async () => {
+  console.log("Database is ready!")
+  updateStats()
+  const findDefaultRole = await Role.findOne({where:{name: "default"}})
+  if (!findDefaultRole) {
+  Role.create({
+    name: "default",
+    maxSubdomains: 5,
+    default: true
+  })
+  }
 
-if (process.env.SETUPED == "yes") {
-let https;
-if (process.env.HTTPS == "yes") https = true
-else https = false
+})
+
 initializePassport()
 app.use(session({
     secret: process.env.SESSION_SECRET || crypto.randomBytes(64).toString('hex'),
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV === "production" ? true : https,
+      secure: process.env.HTTPS == "yes" ? true : false,
       httpOnly: true,
       maxAge: 86400000,
     },
   }))
   app.use(passport.initialize())
   app.use(passport.session())
-  updateStats()
 
-async function checkDefaultRole() {
-const findDefaultRole = await Role.findOne({where:{name: "default"}})
-if (!findDefaultRole) {
-Role.create({
-  name: "default",
-  maxSubdomains: 5,
-  default: true
-})
-}
-}
-checkDefaultRole()
-}
 app.use(express.urlencoded({ extended: false }))
 app.use(flash())
 
