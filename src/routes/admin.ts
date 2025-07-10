@@ -15,22 +15,24 @@ router.get("/", checkSetup, checkAuth, checkAdmin, async function (req, res) {
     const subdomains = await Subdomain.findAll()
     const latestversion = await axios.get("https://version.danee.dev/domainer/version.txt").then((res) => {return res.data})
     const stats = await Stats.findOne()
-    const packageJsonContent = JSON.parse(fs.readFileSync(__dirname + "/../package.json", "utf8"));
+    const packageJsonContent = JSON.parse(fs.readFileSync("package.json", "utf8"));
     const currentversion = packageJsonContent.version;
     const users = await User.findAll()
     const roles = await Role.findAll()
+    const user = req.user as User;
+    const userDb = await User.findOne({ where: { username: user.username } });
     updateStats()
-    res.render("admin.html", {subdomains: subdomains, message: req.flash("adminerror"), stats: stats, latestversion: latestversion, currentversion: currentversion, users: users, roles: roles})
+    res.render("admin/admin.html", {domain: process.env.DOMAIN, user: userDb, subdomains: subdomains, error: req.flash("adminerror"), stats: stats, latestversion: latestversion, currentversion: currentversion, users: users, roles: roles})
 })
 
-router.post("/approve", checkSetup, checkAuth, checkAdmin, async function (req, res) {
-    const findSubdomain = await Subdomain.findOne({ where: {subdomain: req.body.subdomain}})
+router.post("/approve/:id", checkSetup, checkAuth, checkAdmin, async function (req, res) {
+    const findSubdomain = await Subdomain.findOne({ where: { id: req.params.id } })
     if (findSubdomain) {
         if (findSubdomain.status == 2) {
             req.flash("adminerror", "That subdomain is already approved!")
             res.redirect("/admin")
         } else {
-            const subdomain = await Subdomain.findOne({where: {subdomain: req.body.subdomain}})
+            const subdomain = await Subdomain.findOne({where: {id: req.params.id}})
             if (!subdomain) {
                 req.flash("adminerror", "That subdomain doesn't exist!")
                 res.redirect("/admin")
@@ -54,15 +56,13 @@ router.post("/approve", checkSetup, checkAuth, checkAdmin, async function (req, 
     }
 })
 
-router.post("/decline", checkSetup, checkAuth, checkAdmin, async function (req, res) {
-    const findSubdomain = await Subdomain.findOne({where: {subdomain: req.body.subdomain}})
+router.post("/decline/:id", checkSetup, checkAuth, checkAdmin, async function (req, res) {
+    const findSubdomain = await Subdomain.findOne({where: {id: req.params.id}})
     if (findSubdomain) {
         if (findSubdomain.status == 0) {
             req.flash("adminerror", "That subdomain is already declined!")
             res.redirect("/admin")
         } else {
-            findSubdomain.status = 0
-            findSubdomain.save()
             if (findSubdomain.status == 2) {
             cf.dns.records.list({zone_id: process.env.CLOUDFLARE_ZONE_ID || ""}).then((data) => {
                 const record = data.result.find(record => record.name == findSubdomain.subdomain)
@@ -74,6 +74,8 @@ router.post("/decline", checkSetup, checkAuth, checkAdmin, async function (req, 
                 cf.dns.records.delete(record.id, {zone_id: process.env.CLOUDFLARE_ZONE_ID || ""})
             })
             }
+            findSubdomain.status = 0
+            findSubdomain.save()
             res.redirect("/admin")
         }
     } else {
@@ -82,15 +84,13 @@ router.post("/decline", checkSetup, checkAuth, checkAdmin, async function (req, 
     }
 })
 
-router.post("/review", checkSetup, checkAuth, checkAdmin, async function (req, res) {
-    const findSubdomain = await Subdomain.findOne({ where: {subdomain: req.body.subdomain}})
+router.post("/review/:id", checkSetup, checkAuth, checkAdmin, async function (req, res) {
+    const findSubdomain = await Subdomain.findOne({ where: { id: req.params.id } })
     if (findSubdomain) {
         if (findSubdomain.status == 1) {
             req.flash("adminerror", "That subdomain is already in review!")
             res.redirect("/admin")
         } else {
-            findSubdomain.status = 1
-            findSubdomain.save()
             if (findSubdomain.status == 2) {
                 cf.dns.records.list({zone_id: process.env.CLOUDFLARE_ZONE_ID || ""}).then((data) => {
                     const record = data.result.find(record => record.name == findSubdomain.subdomain)
@@ -102,6 +102,8 @@ router.post("/review", checkSetup, checkAuth, checkAdmin, async function (req, r
                     cf.dns.records.delete(record.id, {zone_id: process.env.CLOUDFLARE_ZONE_ID || ""})
                 })
                 }
+            findSubdomain.status = 1
+            findSubdomain.save()
             res.redirect("/admin")
         }
     } else {
