@@ -2,14 +2,14 @@ import { Request, Response, NextFunction } from "express";
 import User from "../models/User";
 
 function checkAuth(req: Request, res: Response, next: NextFunction) {
-    if (req.isAuthenticated()) {
+    if (req.user) {
         return next()
     }
-    res.redirect("/login")
+    res.redirect("/auth/login")
 }
 
 function checkNotAuth(req: Request, res: Response, next: NextFunction) {
-    if (req.isAuthenticated()) {
+    if (req.user) {
         return res.redirect("/dash")
     }
     next()
