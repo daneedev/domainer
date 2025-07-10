@@ -6,13 +6,47 @@
 {% endblock %}
 
 {% block content %}
+    {% if error.length > 0 %}
+    <div class="alert alert-error">
+        <p>{{ error }}</p>
+    </div>
+    {% endif %}
+    {% if success.length > 0 %}
+    <div class="alert alert-success">
+        <p>{{ success }}</p>
+    </div>
+    {% endif %}
     <article class="register-domain">
         <form action="/subdomains/add" method="post">
-            <div class="domain-input">
-                <input type="text" id="subdomain" name="subdomain" placeholder="yourname" class="subdomain-input" maxlength="20" required>
-                <p class="domain-suffix gradient-text">.{{ domain }}</p>
-            </div>
-            <button type="submit" class="btn-primary">Request a subdomain</button>
+            <section class="subdomain-form">
+                <div class="domain-input">
+                    <input type="text" id="subdomain" name="subdomain" class="subdomain-input" placeholder="yourname" maxlength="20" required>
+                    <p class="domain-suffix gradient-text">.{{ domain }}</p>
+                </div>
+                
+                <div class="form-arrow-section">
+                    <div class="arrow-container">
+                        <i class="fa-solid fa-arrow-right gradient-text"></i>
+                    </div>
+                </div>
+
+                <select name="recordType" id="recordType" class="record-type-selector" required>
+                        <option value="A">A</option>
+                        <option value="AAAA">AAAA</option>
+                        <option value="CNAME">CNAME</option>
+                </select>
+
+                <div class="form-arrow-section">
+                    <div class="arrow-container">
+                        <i class="fa-solid fa-arrow-right gradient-text"></i>
+                    </div>
+                </div>
+
+                <div class="destination-input">
+                    <input type="text" id="pointedto" name="pointedto" placeholder="example.com" required>
+                </div>
+            </section>
+            <button type="submit" class="btn-primary submit-btn">Request Subdomain</button>
         </form>
     </article>
     <article class="your-subdomains">
