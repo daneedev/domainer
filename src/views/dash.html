@@ -56,19 +56,25 @@
                 <div class="subdomain-item">
                     <div class="subdomain-column">
                         <p class="subdomain-key">Name</p>
-                        <p class="subdomain-value">{{ subdomain.name }}</p>
+                        <p class="subdomain-value">{{ subdomain.subdomain }}</p>
                     </div>
                     <div class="subdomain-column">
                         <p class="subdomain-key">Status</p>
-                        <p class="subdomain-value">{{ subdomain.status }}</p>
+                        {% if subdomain.status  == 0 %}
+                        <p class="subdomain-value red">Declined</p>
+                        {% elif subdomain.status == 1 %}
+                        <p class="subdomain-value yellow">Pending review</p>
+                        {% elif subdomain.status == 2 %}
+                        <p class="subdomain-value green">Active</p>
+                        {% endif %}
                     </div>
                     <div class="subdomain-column">
                         <p class="subdomain-key">Record type</p>
-                        <p class="subdomain-value">{{ subdomain.record_type }}</p>
+                        <p class="subdomain-value">{{ subdomain.recordType }}</p>
                     </div>
                     <div class="subdomain-column">
                         <p class="subdomain-key">Pointed to</p>
-                        <p class="subdomain-value">{{ subdomain.pointed_to }}</p>
+                        <p class="subdomain-value">{{ subdomain.pointedto }}</p>
                     </div>
                     <div class="subdomain-actions">
                         <a href="/subdomains/{{ subdomain.name }}/edit" class="btn-primary">Edit</a>

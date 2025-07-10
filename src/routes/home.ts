@@ -11,8 +11,13 @@ const router = express.Router();
 const router2 = express.Router();
 const router3 = express.Router();
 
-router.get("/", checkSetup, checkNotAuth, function (req, res) {
-    res.render("index.html", {domain: process.env.DOMAIN})
+router.get("/", checkSetup, async function (req, res) {
+    if (req.isAuthenticated()) {
+        const user = req.user as User;
+        const userDb = await User.findOne({ where: { username: user.username } });
+        return res.render("index.html", { domain: process.env.DOMAIN, user: userDb });
+    }
+    res.render("index.html", {domain: process.env.DOMAIN, user: null});
 })
 
 router2.get("/", checkSetup, checkAuth, async function (req, res) {
@@ -25,7 +30,7 @@ router2.get("/", checkSetup, checkAuth, async function (req, res) {
         res.redirect("/login")
         return;
     }
-    res.render("dash.html", {domain: process.env.DOMAIN, subdomains: subdomains, user: userDb, subdomainsLimit: role.maxSubdomains, subdomainsCount: user.subdomainsCount})
+    res.render("dash.html", {domain: process.env.DOMAIN, subdomains: subdomains, user: userDb, subdomainsLimit: role.maxSubdomains, subdomainsCount: user.subdomainsCount, error: req.flash("error"), success: req.flash("success")})
 })
 
 router3.get("/", checkNotSetup, async function (req, res) {
