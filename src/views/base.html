@@ -18,6 +18,9 @@
         {% if user %}
         <ul>
             <li><a href="/dash">Dashboard</a></li>
+            {% if user.isAdmin %}
+            <li><a href="/admin">Admin Panel</a></li>
+            {% endif %}
             <li><a href="/auth/logout">Logout</a></li>
         </ul>
         {% else %}
