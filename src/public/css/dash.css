@@ -1,0 +1,79 @@
+.register-domain {
+    margin-top: 50px;
+}
+
+.subdomain-input {
+    padding: 10px;
+    background-color: transparent;
+    font-size: 80px;
+    color: rgba(255, 255, 255, 0.8);
+    width: auto;
+    field-sizing: content;
+
+}
+.domain-suffix {
+    font-size: 80px;
+    font-weight: 700;
+}
+.domain-input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.register-domain form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.your-subdomains {
+    margin: 100px auto;
+    padding: 20px;
+    background-color: var(--dark-gray);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: start;
+    width: 80%;
+    max-width: 2000px;
+}
+.your-subdomains h1 {
+    color: var(--text-color);
+    font-size: 24px;
+    font-weight: 600;
+}
+.subdomain-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.subdomain-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+.subdomain-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.subdomain-column {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.subdomain-key {
+    color: rgba(255, 255, 255, 0.6)
+}
+.subdomain-value {
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 18px;
+}

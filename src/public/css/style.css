@@ -83,7 +83,7 @@ body > nav ul li a:hover, .btn-primary:hover {
   align-items: center;
   justify-content: center;
   border-radius: 8px;
-  margin-top: 20px;
+  margin: 100px auto;
   padding: 20px 0;
   max-width: 2000px;
 }
@@ -151,6 +151,18 @@ form label {
 .btn-primary {
   font-size: 16px;
   padding: 10px 20px;
+}
+.btn-secondary {
+  font-size: 16px;
+  padding: 10px 20px;
+  background-color: var(--dark-gray);
+  color: var(--text-color);
+  border-radius: 4px;
+}
+.btn-secondary:hover {
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  border: 2px solid transparent;
 }
 
 .textfield {
@@ -228,6 +240,11 @@ a {
   background-color: rgba(0, 255, 0, 0.1);
   border: 1px solid rgba(0, 255, 0, 0.3);
   color: rgba(0, 255, 0, 0.8);
+}
+.alert-info {
+  background-color: rgba(95, 191, 249, 0.1);
+  border: 1px solid rgba(95, 191, 249, 0.3);
+  color: rgba(95, 191, 249, 0.8);
 }
 
 @media (max-width: 1050px) {

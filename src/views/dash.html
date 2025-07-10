@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>{{ domain }} | Dashboard</title>
+<link rel="stylesheet" href="/css/dash.css">
+{% endblock %}
+
+{% block content %}
+    <article class="register-domain">
+        <form action="/subdomains/add" method="post">
+            <div class="domain-input">
+                <input type="text" id="subdomain" name="subdomain" placeholder="yourname" class="subdomain-input" maxlength="20" required>
+                <p class="domain-suffix gradient-text">.{{ domain }}</p>
+            </div>
+            <button type="submit" class="btn-primary">Request a subdomain</button>
+        </form>
+    </article>
+    <article class="your-subdomains">
+        <h1>Your Subdomains</h1>
+        <section class="subdomain-list">
+            {% for subdomain in subdomains %}
+                <div class="subdomain-item">
+                    <div class="subdomain-column">
+                        <p class="subdomain-key">Name</p>
+                        <p class="subdomain-value">{{ subdomain.name }}</p>
+                    </div>
+                    <div class="subdomain-column">
+                        <p class="subdomain-key">Status</p>
+                        <p class="subdomain-value">{{ subdomain.status }}</p>
+                    </div>
+                    <div class="subdomain-column">
+                        <p class="subdomain-key">Record type</p>
+                        <p class="subdomain-value">{{ subdomain.record_type }}</p>
+                    </div>
+                    <div class="subdomain-column">
+                        <p class="subdomain-key">Pointed to</p>
+                        <p class="subdomain-value">{{ subdomain.pointed_to }}</p>
+                    </div>
+                    <div class="subdomain-actions">
+                        <a href="/subdomains/{{ subdomain.name }}/edit" class="btn-primary">Edit</a>
+                        <form action="/subdomains/{{ subdomain.name }}/delete" method="post" class="delete-form">
+                            <button type="submit" class="btn-primary">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+            {% if subdomains.length === 0 %}
+            <div class="alert alert-info">
+                <p>You have no subdomains yet. Use the request form above to request one!</p>
+            </div>
+        {% endif %}
+        </section>
+    </article>
+{% endblock %}

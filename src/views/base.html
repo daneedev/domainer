@@ -15,14 +15,23 @@
 <body>
     <nav>
         <a href="/">{{ domain }}</a>
+        {% if user %}
+        <ul>
+            <li><a href="/dash">Dashboard</a></li>
+            <li><a href="/auth/logout">Logout</a></li>
+        </ul>
+        {% else %}
         <ul>
             <li><a href="/auth/login">Login</a></li>
             <li><a href="/auth/register">Register</a></li>
         </ul>
+        {% endif %}
     </nav>
     <article class="hero">
         <p class="hero-text">{% block herotext %}{% endblock %}</p>
     </article>
+    {% block body %}
+    {% endblock %}
     <main>
     {% block content %}
     {% endblock %}
