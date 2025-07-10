@@ -58,6 +58,9 @@ app.use(session({
       httpOnly: true,
       maxAge: 86400000,
     },
+    store: new (require('connect-session-sequelize')(session.Store))({
+      db: sequelize
+    }),
   }))
   app.use(passport.initialize())
   app.use(passport.session())
