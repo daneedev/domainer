@@ -50,7 +50,7 @@ router.post("/register", checkSetup, checkNotAuth, async function (req, res) {
     }
 })
 
-router.post("/logout", checkSetup, checkAuth, function (req, res) {
+router.get("/logout", checkSetup, checkAuth, function (req, res) {
     req.logOut(function(err) {
         if (err) {
             console.error("Logout error:", err);

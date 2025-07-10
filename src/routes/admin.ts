@@ -12,7 +12,12 @@ import fs from "fs";
 const router = express.Router();
 
 router.get("/", checkSetup, checkAuth, checkAdmin, async function (req, res) {
-    const subdomains = await Subdomain.findAll()
+    const subdomains = (await Subdomain.findAll()).sort((a, b) => {
+        if (a.status === b.status) {
+            return a.subdomain.localeCompare(b.subdomain);
+        }
+        return a.status - b.status;
+    })
     const latestversion = await axios.get("https://version.danee.dev/domainer/version.txt").then((res) => {return res.data})
     const stats = await Stats.findOne()
     const packageJsonContent = JSON.parse(fs.readFileSync("package.json", "utf8"));
@@ -22,23 +27,23 @@ router.get("/", checkSetup, checkAuth, checkAdmin, async function (req, res) {
     const user = req.user as User;
     const userDb = await User.findOne({ where: { username: user.username } });
     updateStats()
-    res.render("admin/admin.html", {domain: process.env.DOMAIN, user: userDb, subdomains: subdomains, error: req.flash("adminerror"), stats: stats, latestversion: latestversion, currentversion: currentversion, users: users, roles: roles})
+    res.render("admin/admin.html", {domain: process.env.DOMAIN, user: userDb, subdomains: subdomains, error: req.flash("error"), stats: stats, latestversion: latestversion, currentversion: currentversion, users: users, roles: roles, success: req.flash("success")})
 })
 
 router.post("/approve/:id", checkSetup, checkAuth, checkAdmin, async function (req, res) {
     const findSubdomain = await Subdomain.findOne({ where: { id: req.params.id } })
     if (findSubdomain) {
-        if (findSubdomain.status == 2) {
-            req.flash("adminerror", "That subdomain is already approved!")
+        if (findSubdomain.status == 1) {
+            req.flash("error", "That subdomain is already approved!")
             res.redirect("/admin")
         } else {
             const subdomain = await Subdomain.findOne({where: {id: req.params.id}})
             if (!subdomain) {
-                req.flash("adminerror", "That subdomain doesn't exist!")
+                req.flash("error", "That subdomain doesn't exist!")
                 res.redirect("/admin")
                 return;
             }
-            subdomain.status = 2
+            subdomain.status = 1
             subdomain.save()
             await cf.dns.records.create({
                 zone_id: process.env.CLOUDFLARE_ZONE_ID || "",
@@ -48,10 +53,11 @@ router.post("/approve/:id", checkSetup, checkAuth, checkAdmin, async function (r
                 ttl: 1,
                 proxied: false
             })
+            req.flash("success", "Subdomain approved successfully! DNS record created in Cloudflare.")
             res.redirect("/admin")
         }
     } else {
-        req.flash("adminerror", "That subdomain doesn't exist!")
+        req.flash("error", "That subdomain doesn't exist!")
         res.redirect("/admin")
     }
 })
@@ -59,27 +65,28 @@ router.post("/approve/:id", checkSetup, checkAuth, checkAdmin, async function (r
 router.post("/decline/:id", checkSetup, checkAuth, checkAdmin, async function (req, res) {
     const findSubdomain = await Subdomain.findOne({where: {id: req.params.id}})
     if (findSubdomain) {
-        if (findSubdomain.status == 0) {
-            req.flash("adminerror", "That subdomain is already declined!")
+        if (findSubdomain.status == 2) {
+            req.flash("error", "That subdomain is already declined!")
             res.redirect("/admin")
         } else {
-            if (findSubdomain.status == 2) {
+            if (findSubdomain.status == 1) {
             cf.dns.records.list({zone_id: process.env.CLOUDFLARE_ZONE_ID || ""}).then((data) => {
                 const record = data.result.find(record => record.name == findSubdomain.subdomain)
                 if (!record) {
-                    req.flash("adminerror", "That subdomain doesn't exist in Cloudflare!")
+                    req.flash("error", "That subdomain doesn't exist in Cloudflare!")
                     res.redirect("/admin")
                     return;
                 }
                 cf.dns.records.delete(record.id, {zone_id: process.env.CLOUDFLARE_ZONE_ID || ""})
             })
             }
-            findSubdomain.status = 0
+            findSubdomain.status = 2
             findSubdomain.save()
+            req.flash("success", "Subdomain declined successfully! DNS record removed from Cloudflare.")
             res.redirect("/admin")
         }
     } else {
-        req.flash("adminerror", "That subdomain doesn't exist!")
+        req.flash("error", "That subdomain doesn't exist!")
         res.redirect("/admin")
     }
 })
@@ -87,27 +94,28 @@ router.post("/decline/:id", checkSetup, checkAuth, checkAdmin, async function (r
 router.post("/review/:id", checkSetup, checkAuth, checkAdmin, async function (req, res) {
     const findSubdomain = await Subdomain.findOne({ where: { id: req.params.id } })
     if (findSubdomain) {
-        if (findSubdomain.status == 1) {
-            req.flash("adminerror", "That subdomain is already in review!")
+        if (findSubdomain.status == 0) {
+            req.flash("error", "That subdomain is already in review!")
             res.redirect("/admin")
         } else {
-            if (findSubdomain.status == 2) {
+            if (findSubdomain.status == 1) {
                 cf.dns.records.list({zone_id: process.env.CLOUDFLARE_ZONE_ID || ""}).then((data) => {
                     const record = data.result.find(record => record.name == findSubdomain.subdomain)
                     if (!record) {
-                        req.flash("adminerror", "That subdomain doesn't exist in Cloudflare!")
+                        req.flash("error", "That subdomain doesn't exist in Cloudflare!")
                         res.redirect("/admin")
                         return;
                     }
                     cf.dns.records.delete(record.id, {zone_id: process.env.CLOUDFLARE_ZONE_ID || ""})
                 })
                 }
-            findSubdomain.status = 1
+            findSubdomain.status = 0
             findSubdomain.save()
+            req.flash("success", "Subdomain is now in review! DNS record removed from Cloudflare.")
             res.redirect("/admin")
         }
     } else {
-        req.flash("adminerror", "That subdomain doesn't exist!")
+        req.flash("error", "That subdomain doesn't exist!")
         res.redirect("/admin")
     }
 })

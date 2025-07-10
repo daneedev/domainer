@@ -8,44 +8,36 @@ import User from "../models/User";
 import Role from "../models/Role";
 
 const router = express.Router();
-const router2 = express.Router();
-const router3 = express.Router();
 
-router.get("/add", checkSetup, checkAuth, async function (req, res) {
-    res.render("edit/addsubdomain.html", {domain: process.env.DOMAIN, message: req.flash('domainerror')})
-})
 
 router.post("/add", checkSetup, checkAuth, async function (req, res) {
     const findSubdomain = await Subdomain.findOne({where:{subdomain: req.body.subdomain}})
     if (findSubdomain) {
-        req.flash("domainerror", "That subdomain already exists!")
-        res.redirect("/add")
-    } else if (!req.body.subdomain.includes(process.env.DOMAIN)) {
-        req.flash("domainerror", `That subdomain doesn't contain ${process.env.DOMAIN}!`)
-        res.redirect("/add")
+        req.flash("error", "That subdomain already exists!")
+        res.redirect("/dash")
     } else {
         const user = await User.findOne({where:{username: (req.user as User).username}})
         if (!user) {
-            req.flash("domainerror", "User not found!")
-            res.redirect("/add")
+            req.flash("error", "User not found!")
+            res.redirect("/dash")
             return;
         }
         const role = await Role.findOne({where:{name: user.role}})
         if (!role) {
-            req.flash("domainerror", "No role found! Please contact the administrator.")
-            res.redirect("/add")
+            req.flash("error", "No role found! Please contact the administrator.")
+            res.redirect("/dash")
             return;
         }
         if (user.subdomainsCount >= role.maxSubdomains) {
-            req.flash("domainerror", `You can't have more than ${role.maxSubdomains} subdomains!`)
-            res.redirect("/add")
+            req.flash("error", `You can't have more than ${role.maxSubdomains} subdomains!`)
+            res.redirect("/dash")
         } else {
         Subdomain.create({
-            subdomain: req.body.subdomain,
+            subdomain: `${req.body.subdomain}.${process.env.DOMAIN}`,
             owner: (req.user as User).username,
             pointedTo: req.body.pointedto,
             recordType: req.body.recordType,
-            status: 1
+            status: 0
         })
         user.subdomainsCount++
         user.save()
@@ -74,7 +66,7 @@ router.post("/delete", checkSetup, checkAuth, async function (req, res) {
         }
         user.subdomainsCount--
         user.save()
-        if (findSubdomain.status == 2) {
+        if (findSubdomain.status == 1) {
             cf.dns.records.list({zone_id: process.env.CLOUDFLARE_ZONE_ID || ""}).then((data) => {
                 const record = data.result.find(record => record.name == findSubdomain.subdomain)
                 if (!record) {
@@ -127,7 +119,7 @@ router.post("/edit", checkSetup, checkAuth, editLimiter, async function (req, re
         res.redirect("/dash")
     } else if (!req.body.subdomain.includes(process.env.DOMAIN)) {
         req.flash("editerror", `That subdomain doesn't contain ${process.env.DOMAIN}!`)
-        res.redirect("/add")
+        res.redirect("/dash")
     } else {
         const updateSubdomain = await Subdomain.findOne({where:{subdomain: subdomain}})
         if (!updateSubdomain) {

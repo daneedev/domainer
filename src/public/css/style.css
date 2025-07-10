@@ -246,6 +246,15 @@ a {
   border: 1px solid rgba(95, 191, 249, 0.3);
   color: rgba(95, 191, 249, 0.8);
 }
+.green {
+    color: #4CAF50;
+}
+.red {
+    color: #F44336;
+}
+.yellow {
+    color: #E6E18F;
+}
 
 @media (max-width: 1050px) {
     .hero-text {

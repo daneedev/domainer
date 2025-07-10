@@ -61,11 +61,11 @@
                     <div class="subdomain-column">
                         <p class="subdomain-key">Status</p>
                         {% if subdomain.status  == 0 %}
-                        <p class="subdomain-value red">Declined</p>
-                        {% elif subdomain.status == 1 %}
                         <p class="subdomain-value yellow">Pending review</p>
-                        {% elif subdomain.status == 2 %}
+                        {% elif subdomain.status == 1 %}
                         <p class="subdomain-value green">Active</p>
+                        {% elif subdomain.status == 2 %}
+                        <p class="subdomain-value red">Declined</p>
                         {% endif %}
                     </div>
                     <div class="subdomain-column">
@@ -74,7 +74,7 @@
                     </div>
                     <div class="subdomain-column">
                         <p class="subdomain-key">Pointed to</p>
-                        <p class="subdomain-value">{{ subdomain.pointedto }}</p>
+                        <p class="subdomain-value">{{ subdomain.pointedTo }}</p>
                     </div>
                     <div class="subdomain-actions">
                         <a href="/subdomains/{{ subdomain.name }}/edit" class="btn-primary">Edit</a>
