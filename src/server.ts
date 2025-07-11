@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-dotenv.config({path: __dirname + "/data/.env"});
+dotenv.config({path: __dirname + "/../data/.env"});
 import express from 'express';
 const app = express();
 import passport from 'passport';
