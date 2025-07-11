@@ -1,0 +1,156 @@
+.register-domain {
+    margin-top: 50px;
+}
+.register-domain form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.subdomain-form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.domain-input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.domain-input:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.subdomain-input {
+    padding: 10px;
+    background-color: transparent;
+    font-size: 80px;
+    color: rgba(255, 255, 255, 0.8);
+    width: auto;
+    field-sizing: content;
+    border: none;
+    outline: none;
+}
+
+.domain-suffix {
+    font-size: 80px;
+    font-weight: 700;
+}
+
+.form-arrow-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.record-type-selector {
+    padding: 12px 20px;
+    background: rgba(255, 255, 255, 0.1);
+    background-color: var(--dark-gray);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: var(--text-color);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+
+.arrow-container i {
+    font-size: 48px;
+}
+
+
+.destination-input {
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.destination-input:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.destination-input input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 32px;
+    font-weight: 600;
+    width: 300px;
+    text-align: center;
+}
+
+.destination-input input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+
+
+.your-subdomains {
+    margin: 100px auto;
+    padding: 20px;
+    background-color: var(--dark-gray);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: start;
+    width: 80%;
+    max-width: 2000px;
+}
+.your-subdomains h1 {
+    color: var(--text-color);
+    font-size: 24px;
+    font-weight: 600;
+}
+.subdomain-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.subdomain-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+.subdomain-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.subdomain-column {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.subdomain-key {
+    color: rgba(255, 255, 255, 0.6)
+}
+.subdomain-value {
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 18px;
+}

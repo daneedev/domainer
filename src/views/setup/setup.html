@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>{{ domain }} | Setup</title>
+{% endblock %}
+
+
+{% block content %}
+<article class="form-box">
+    <h1>Domainer Setup: Configuration (1/2)</h1>
+    <form action="/setup" method="post">
+        <label for="domain" >Domain</label>
+        <input type="text" id="domain" name="domain" class="textfield"  required>  
+        <label for="sessionsecret" >Session Secret (can be anything)</label>
+        <input type="password" id="sessionsecret" name="sessionsecret" class="textfield" required>
+        <label for="cftoken" >Cloudflare API Token</label>
+        <input type="password" id="cftoken" name="cftoken" class="textfield" required>
+        <label for="cfzone">Cloudflare Zone ID</label>
+        <input type="password" id="cfzone" name="cfzone" class="textfield" required>
+        <label class="checkbox-container" for="https">Enable HTTPS
+            <input type="checkbox" id="https" name="https" value="true">
+            <div class="checkbox"><i class="fa-solid fa-check"></i></div>
+        </label>
+        <button type="submit" class="btn-primary">Continue</button>
+    </form>
+</article>
+{% endblock %}

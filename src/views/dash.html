@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>{{ domain }} | Dashboard</title>
+<link rel="stylesheet" href="/css/dash.css">
+{% endblock %}
+
+{% block content %}
+    {% if error.length > 0 %}
+    <div class="alert alert-error">
+        <p>{{ error }}</p>
+    </div>
+    {% endif %}
+    {% if success.length > 0 %}
+    <div class="alert alert-success">
+        <p>{{ success }}</p>
+    </div>
+    {% endif %}
+    <article class="register-domain">
+        <form action="/subdomains/add" method="post">
+            <section class="subdomain-form">
+                <div class="domain-input">
+                    <input type="text" id="subdomain" name="subdomain" class="subdomain-input" placeholder="yourname" maxlength="20" required>
+                    <p class="domain-suffix gradient-text">.{{ domain }}</p>
+                </div>
+                
+                <div class="form-arrow-section">
+                    <div class="arrow-container">
+                        <i class="fa-solid fa-arrow-right gradient-text"></i>
+                    </div>
+                </div>
+
+                <select name="recordType" id="recordType" class="record-type-selector" required>
+                        <option value="A">A</option>
+                        <option value="AAAA">AAAA</option>
+                        <option value="CNAME">CNAME</option>
+                </select>
+
+                <div class="form-arrow-section">
+                    <div class="arrow-container">
+                        <i class="fa-solid fa-arrow-right gradient-text"></i>
+                    </div>
+                </div>
+
+                <div class="destination-input">
+                    <input type="text" id="pointedto" name="pointedto" placeholder="example.com" required>
+                </div>
+            </section>
+            <button type="submit" class="btn-primary submit-btn">Request Subdomain</button>
+        </form>
+    </article>
+    <article class="your-subdomains">
+        <h1>Your Subdomains</h1>
+        <section class="subdomain-list">
+            {% for subdomain in subdomains %}
+                <div class="subdomain-item">
+                    <div class="subdomain-column">
+                        <p class="subdomain-key">Name</p>
+                        <p class="subdomain-value">{{ subdomain.subdomain }}</p>
+                    </div>
+                    <div class="subdomain-column">
+                        <p class="subdomain-key">Status</p>
+                        {% if subdomain.status  == 0 %}
+                        <p class="subdomain-value yellow">Pending review</p>
+                        {% elif subdomain.status == 1 %}
+                        <p class="subdomain-value green">Active</p>
+                        {% elif subdomain.status == 2 %}
+                        <p class="subdomain-value red">Declined</p>
+                        {% endif %}
+                    </div>
+                    <div class="subdomain-column">
+                        <p class="subdomain-key">Record type</p>
+                        <p class="subdomain-value">{{ subdomain.recordType }}</p>
+                    </div>
+                    <div class="subdomain-column">
+                        <p class="subdomain-key">Pointed to</p>
+                        <p class="subdomain-value">{{ subdomain.pointedTo }}</p>
+                    </div>
+                    <div class="subdomain-actions">
+                        <a href="/subdomains/{{ subdomain.name }}/edit" class="btn-primary">Edit</a>
+                        <form action="/subdomains/{{ subdomain.name }}/delete" method="post" class="delete-form">
+                            <button type="submit" class="btn-primary">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+            {% if subdomains.length === 0 %}
+            <div class="alert alert-info">
+                <p>You have no subdomains yet. Use the request form above to request one!</p>
+            </div>
+        {% endif %}
+        </section>
+    </article>
+{% endblock %}

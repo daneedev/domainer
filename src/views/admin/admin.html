@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>{{ domain }} | Admin panel</title>
+<link rel="stylesheet" href="/css/admin.css">
+{% endblock %}
+
+{% block herotext %}
+<span class="gradient-text">Admin Panel</span>
+{% endblock %}
+
+{% block body %}
+{% if error.length > 0 %}
+<div class="alert alert-error">
+    <p>{{ error }}</p>
+</div>
+{% endif %}
+{% if success.length > 0 %}
+<div class="alert alert-success">
+    <p>{{ success }}</p>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<article class="stats">
+    <h1>Statistics</h1>
+    <section class="stats-list">
+        <div class="stat-box">
+            <p class="stat-title">Users</p>
+            <p class="stat-value">{{ stats.totalUsers }}</p>
+        </div>
+        <div class="stat-box">
+            <p class="stat-title">Total Subdomains</p>
+            <p class="stat-value">{{ stats.allSubdomains }}</p>
+        </div>
+        <div class="stat-box">
+            <p class="stat-title">Approved Subdomains</p>
+            <p class="stat-value">{{ stats.approvedSubdomains }}</p>
+        </div>
+        <div class="stat-box">
+            <p class="stat-title">Pending Subdomains</p>
+            <p class="stat-value">{{ stats.pendingReviewSubdomains }}</p>
+        </div>
+        <div class="stat-box">
+            <p class="stat-title">Rejected Subdomains</p>
+            <p class="stat-value">{{ stats.declinedSubdomains }}</p>
+        </div>
+        {% if latestversion != currentversion %}
+        <div class="stat-box">
+            <p class="stat-title">Version</p>
+            <p class="stat-value">{{ currentversion }} <a href="https://github.com/daneedev/domainer/releases">v{{ latestversion }} is available</a></p>
+        </div>
+        {% else %}
+        <div class="stat-box">
+            <p class="stat-title">Version</p>
+            <p class="stat-value">{{ currentversion }} <span class="green">(up to date)</span></p>
+        </div>
+        {% endif %}
+    </section>
+</article>
+<article class="manager">
+    <h1>Manager</h1>
+    <section class="action-btns">
+        <div class="btn-primary" id="manage-users">Manage Users</div>
+        <div class="btn-primary" id="manage-subdomains">Manage Subdomains</div>
+    </section>
+    <div class="alert alert-info" id="no-table-selected">
+        <p>You have no table selected. Select users/subdomains above.</p>
+    </div>
+    <table class="users-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Subdomains count</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.role }}</td>
+                <td>{{ user.subdomainsCount }}</td>
+                <td class="manage-actions">
+                    <a href="/admin/users/{{ user.id }}/edit" class="btn-primary">Edit</a>
+                    <form action="/admin/users/{{ user.id }}/delete" method="post" class="delete-form">
+                        <button type="submit" class="btn-primary">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <table class="subdomains-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Subdomain</th>
+                <th>Status</th>
+                <th>Record Type</th>
+                <th>Pointed To</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if subdomains.length === 0 %}
+            <tr>
+                <td colspan="6" class="alert alert-info">
+                    <p>No subdomains are currently registered.</p>
+                </td>
+            </tr>
+            {% endif %}
+            {% for subdomain in subdomains %}
+            <tr>
+                <td>{{ subdomain.id }}</td>
+                <td>{{ subdomain.subdomain }}</td>
+                <td>
+                    {% if subdomain.status == 0 %}
+                    <span class="yellow">Pending review</span>
+                    {% elif subdomain.status == 1 %}
+                    <span class="green">Active</span>
+                    {% elif subdomain.status == 2 %}
+                    <span class="red">Declined</span>
+                    {% endif %}
+                </td>
+                <td>{{ subdomain.recordType }}</td>
+                <td>{{ subdomain.pointedTo }}</td>
+                <td class="manage-actions">
+                    <form action="/admin/approve/{{ subdomain.id }}" method="post">
+                        <button type="submit" class="btn-primary"><i class="fa-solid fa-check"></i></button>
+                    </form>
+                    <form action="/admin/review/{{ subdomain.id }}" method="post">
+                        <button type="submit" class="btn-primary"><i class="fa-solid fa-rotate"></i></button>
+                    </form>
+                    <form action="/admin/decline/{{ subdomain.id }}" method="post">
+                        <button type="submit" class="btn-primary"><i class="fa-solid fa-xmark"></i></button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</article>
+
+<script src="/js/tableSwitcher.js"></script>
+{% endblock %}

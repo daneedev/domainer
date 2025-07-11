@@ -1,17 +1,21 @@
 {
   "name": "domainer",
-  "version": "2.1.0",
+  "version": "3.0.0-beta.1",
   "description": "A web-based user subdomain manager.",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "build": "tsc",
+    "serve": "node dist/server.js",
+    "dev": "ts-node-dev src/server.ts",
+    "cssbuild": "npx @tailwindcss/cli -i ./src/public/css/tailwind.css -o ./src/public/css/style.css --minify",
+    "cssdev": "npx tailwindcss -i ./src/public/css/tailwind.css -o ./src/public/css/style.css --watch"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/domainerapp/domainer.git"
   },
-  "author": "DaneeSkripter",
+  "author": "Danee",
   "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/domainerapp/domainer/issues"
@@ -22,6 +26,7 @@
     "bcrypt": "^6.0.0",
     "cloudflare": "^4.4.1",
     "connect-flash": "^0.1.1",
+    "connect-session-sequelize": "^8.0.1",
     "dotenv": "^17.0.0",
     "express": "^5.1.0",
     "express-rate-limit": "^7.5.1",
@@ -31,6 +36,16 @@
     "passport-local": "^1.0.0",
     "sanitize-filename": "^1.6.3",
     "sequelize": "^6.37.7",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "ts-node-dev": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/connect-flash": "^0.0.40",
+    "@types/express-session": "^1.18.2",
+    "@types/nunjucks": "^3.2.6",
+    "@types/passport": "^1.0.17",
+    "@types/passport-local": "^1.0.38",
+    "typescript": "^5.8.3"
   }
 }

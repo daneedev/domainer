@@ -1,0 +1,67 @@
+.stats, .manager {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.stats h1, .manager h1 {
+    color: #fff;
+    font-size: 24px;
+    font-weight: 700;
+}
+.stats-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+.stat-box {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 8px;
+}
+.stat-title {
+    color: #fff;
+    font-size: 18px;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.stat-value {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 16px;
+    margin: 0;
+    font-weight: 400;
+}
+
+.action-btns {
+    display: flex;
+    gap: 15px;
+    justify-content: space-evenly;
+}
+
+.users-table, .subdomains-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    max-height: 500px;
+    display: none;
+}
+.users-table th, .users-table td, .subdomains-table th, .subdomains-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.users-table th, .subdomains-table th {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+.users-table td, .subdomains-table td  {
+    color: rgba(255, 255, 255, 0.6);
+}
+.manage-actions {
+    display: flex;
+    gap: 15px;
+}
