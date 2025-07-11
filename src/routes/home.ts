@@ -71,7 +71,7 @@ router3.post("/2", checkNotSetup, async function (req, res) {
         subdomainsCount: 0,
         isAdmin: true
     })
-    fs.writeFileSync('/data/.env', `SETUPED=yes\n`, { flag: 'a' })
+    fs.writeFileSync(__dirname + '/../../data/.env', `SETUPED=yes\n`, { flag: 'a' })
     dotenv.config({path: __dirname + '/../../data/.env'})
     res.redirect("/")
 })
