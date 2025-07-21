@@ -40,7 +40,7 @@
     "ts-node-dev": "^2.0.0"
   },
   "devDependencies": {
-    "@types/bcrypt": "^5.0.2",
+    "@types/bcrypt": "^6.0.0",
     "@types/connect-flash": "^0.0.40",
     "@types/express-session": "^1.18.2",
     "@types/nunjucks": "^3.2.6",
