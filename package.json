@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/domainerapp/domainer#readme",
   "dependencies": {
-    "axios": "^1.10.0",
+    "axios": "^1.11.0",
     "bcrypt": "^6.0.0",
     "cloudflare": "^4.5.0",
     "connect-flash": "^0.1.1",
